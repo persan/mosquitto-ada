@@ -8,7 +8,7 @@ _gprdir=${PERFIX}lib/gpr
 all:compile test
 
 compile:
-	gprbuild -p P mosquitto.gpr
+	gprbuild -p -P mosquitto.gpr
 
 install:
 	mkdir -p ${INSTALLDIR}${_includedir}
