@@ -3,8 +3,7 @@
 PERFIX_=$(dir $(shell dirname $(shell which gnatls)))
 
 -include Makefile.conf
-xx:
-	echo ${PERFIX}
+
 all:
 
 Makefile.conf:Makefile
