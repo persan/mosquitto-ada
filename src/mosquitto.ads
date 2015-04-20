@@ -26,7 +26,7 @@ package Mosquitto is
    function Is_Initialzed (Mosq : Handle) return Boolean;
    function Is_Connected (Mosq : Handle) return Boolean;
 
-   procedure Initialize (Mosq           : aliased in out Handle;
+   procedure Initialize (Mosq           : in out Handle;
                          ID             : String;
                          Clean_Sessions : Boolean := True); --  with
      --  Pre => ((Id = "" and then Clean_Sessions) or else Id /= "");
@@ -41,7 +41,7 @@ package Mosquitto is
    --                  <reconnect> will cause the messages to be resent.
    --                  Use <reinitialise> to reset a client to its original state.
 
-   procedure Reinitialise (Mosq           : aliased in out Handle;
+   procedure Reinitialise (Mosq           : in out Handle;
                            ID             : String  := "";
                            Clean_Sessions : Boolean := True); -- with
      --  Pre => ((Id = "" and then Clean_Sessions) or else Id /= "");

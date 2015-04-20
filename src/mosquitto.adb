@@ -200,7 +200,7 @@ package body Mosquitto is
    ----------------
 
    procedure Initialize
-     (Mosq           : aliased in out Handle;
+     (Mosq           : in out Handle;
       ID             : String;
       Clean_Sessions : Boolean := True)
    is
@@ -213,7 +213,7 @@ package body Mosquitto is
       Free (L_ID);
    end Initialize;
 
-   procedure Reinitialise (Mosq           : aliased in out Handle;
+   procedure Reinitialise (Mosq           : in out Handle;
                            ID             : String := "";
                            Clean_Sessions : Boolean := True) is
       L_ID : Interfaces.C.Strings.Chars_Ptr := (if Id = "" then Null_Ptr else New_String (ID));
