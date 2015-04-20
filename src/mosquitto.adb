@@ -7,7 +7,6 @@ package body Mosquitto is
    use Mosquitto.Mosquitto_H;
    use Interfaces.C;
    use Interfaces.C.Strings;
-   use System;
    package Error_Text is
       MOSQ_ERR_NOMEM         : aliased constant String := "out of memory";
       MOSQ_ERR_PROTOCOL      : aliased constant String := "protocol error communicating with the broker";
@@ -200,7 +199,7 @@ package body Mosquitto is
    ----------------
 
    procedure Initialize
-     (Mosq           : aliased in out Handle;
+     (Mosq           : in out Handle;
       ID             : String;
       Clean_Sessions : Boolean := True)
    is
@@ -213,7 +212,7 @@ package body Mosquitto is
       Free (L_ID);
    end Initialize;
 
-   procedure Reinitialise (Mosq           : aliased in out Handle;
+   procedure Reinitialise (Mosq           : in out Handle;
                            ID             : String := "";
                            Clean_Sessions : Boolean := True) is
       L_ID : Interfaces.C.Strings.Chars_Ptr := (if Id = "" then Null_Ptr else New_String (ID));
@@ -463,9 +462,9 @@ package body Mosquitto is
       Qos        : QoS_Type;
       Retain     : Boolean)
    is
-      L_Mid   : access Int with Import => True,
-        Convention => C,
-        Address => Mid'Address;
+      L_Mid   : access Int;
+      pragma Import (C, L_Mid);
+      for L_Mid'Address use Mid'Address;
       L_Topic : Chars_Ptr := New_String (Topic);
       Ret     : Int;
    begin
@@ -522,9 +521,9 @@ package body Mosquitto is
       Topic : String;
       Qos   : QoS_Type := QOS_0)
    is
-      L_Mid   : access Int with Import => True,
-        Convention => C,
-        Address => Mid'Address;
+      L_Mid   : access Int;
+      pragma  Import (C, L_Mid);
+      for L_Mid'Address use  Mid'Address;
       L_Sub   : Chars_Ptr := New_String (Topic);
       Ret     : Int;
 
@@ -546,10 +545,9 @@ package body Mosquitto is
       Mid   : access Message_Id;
       Topic : String)
    is
-      L_Mid   : access Int with
-        Import => True,
-        Convention => C,
-        Address => Mid'Address;
+      L_Mid   : access Int;
+      pragma Import (C, L_Mid);
+      for L_mid'Address use Mid'Address;
       L_Sub   : Chars_Ptr := New_String (Topic);
       Ret     : Int;
 
@@ -640,7 +638,8 @@ package body Mosquitto is
             end if;
             raise Mosquitto_Error with "[" & Img (Errno) & "] " &  Exception_Table (Mosq_Err_T (Code)).all &
             (if Mosq_Err_T (Code) = MOSQ_ERR_ERRNO then
-                " [" & Gnat.OS_Lib.Errno_Message (Err => Integer (Errno)) & "]"
+                --  " [" & Gnat.OS_Lib.Errno_Message (Err => Integer (Errno)) & "]"
+                " [" & Errno'Img & "]"
              else "");
          else
             raise Program_Error with "Unknown code:" & Errno'Img;

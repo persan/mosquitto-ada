@@ -69,9 +69,9 @@ package body Mosquitto.Tests.App is
       QoS     : QoS_Type;
       Retain  : Boolean)
    is
-      Overlayed_Data : String (Natural (Payload'First) .. Natural (Payload'Last)) with
-        Import => True,
-        Address => Payload'Address;
+      Overlayed_Data : String (Natural (Payload'First) .. Natural (Payload'Last));
+      pragma Import (C, Overlayed_Data);
+      for Overlayed_Data'Address use Payload'Address;
       pragma Unreferenced (Mosq);
    begin
       Self.Put_Line (Enclosing_Entity &
