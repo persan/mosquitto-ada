@@ -3,3 +3,4 @@ _*/
 lib/*/
 lib/
 tests/bin
+Makefile.conf

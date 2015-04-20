@@ -1,9 +1,18 @@
 
 
-PERFIX?=$(dir $(shell dirname $(shell which gnatls)))
-_includedir=${PERFIX}include/mosquitto
-_libdir=${PERFIX}lib/mosquitto
-_gprdir=${PERFIX}lib/gpr
+PERFIX_=$(dir $(shell dirname $(shell which gnatls)))
+
+-include Makefile.conf
+xx:
+	echo ${PERFIX}
+all:
+
+Makefile.conf:Makefile
+
+	echo "PERFIX=${PREFIX_}">${@}
+	echo "_includedir=${PERFIX_}include/mosquitto">>${@}
+	echo "_libdir=${PERFIX_}lib/mosquitto">>${@}
+	echo "_gprdir=${PERFIX_}lib/gpr">>${@}
 
 all:compile test
 
@@ -31,7 +40,7 @@ src/gen/mosquitto-mosquitto_h.ads:  # IGNORE
 
 
 test:
-	${MAKE} -C test
+	${MAKE} -C tests
 
 testinstall:
 
