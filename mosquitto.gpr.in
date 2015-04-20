@@ -1,0 +1,9 @@
+library project Mosquitto is
+
+
+   for Source_Dirs use ("../../include/mosquitto");
+   for Library_Name use "mosquitto-ada";
+   for Library_Dir use "../mosquitto";
+   for Externally_Built use "True";
+
+end Mosquitto;
