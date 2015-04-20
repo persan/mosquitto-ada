@@ -18,8 +18,6 @@ library project Mosquitto is
          , "-O0"
          , "-gnatf"
          , "-fstack-check"
---           , "-gnata"
-         , "-fcallgraph-info=su,da"
          , "-gnatyaAbBcdfhiknOptux"
         );
    end Compiler;

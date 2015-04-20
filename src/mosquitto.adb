@@ -1,3 +1,4 @@
+pragma Ada_2012;
 with Mosquitto.Mosquitto_H;
 with Interfaces.C.Strings;
 with Ada.Unchecked_Conversion;
@@ -124,10 +125,9 @@ package body Mosquitto is
          pragma Unreferenced (Mosq);
          This : constant Handle_Ref := Convert (Obj);
          type Buffer_Type is new Ada.Streams.Stream_Element_Array (1 .. Ada.Streams.Stream_Element_Offset (Msg.Payloadlen));
-         Buffer : Buffer_Type with
-           Import => True,
-           Convention => C,
-           Address => Msg.Payload;
+         Buffer : Buffer_Type;
+         pragma Import (C, Buffer);
+         for Buffer'Address use Msg.Payload;
       begin
          This.Applic.On_Message
            (Mosq    => This,
@@ -148,10 +148,9 @@ package body Mosquitto is
          This : constant Handle_Ref := Convert (Obj);
 
          type This_Qos_Array_Type is new Qos_Array (1 .. Natural (Qos_Count));
-         Granted_Qoses : This_Qos_Array_Type with
-           Import => True,
-           Convention => C,
-           Address => Granted_Qos'Address;
+         Granted_Qoses : This_Qos_Array_Type;
+         pragma Import (C, Granted_Qoses);
+         for Granted_Qoses'Address use Granted_Qos'Address;
       begin
          This.Applic.On_Subscribe (This, Message_Id (Mid), Qos_Array (Granted_Qoses));
       end;
@@ -372,7 +371,7 @@ package body Mosquitto is
 
    procedure Connect_Srv
      (Mosq         : in out Handle;
-      Host         : String;
+      Host         : String := "localhost";
       Keepalive    : Duration := 0.0;
       Bind_Address : String)
    is

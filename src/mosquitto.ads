@@ -1,3 +1,4 @@
+pragma Ada_2012;
 with Ada.Finalization;
 with Interfaces.C;
 with System;
@@ -27,8 +28,8 @@ package Mosquitto is
 
    procedure Initialize (Mosq           : aliased in out Handle;
                          ID             : String;
-                         Clean_Sessions : Boolean := True) with
-     Pre => ((Id = "" and then Clean_Sessions) or else Id /= "");
+                         Clean_Sessions : Boolean := True); --  with
+     --  Pre => ((Id = "" and then Clean_Sessions) or else Id /= "");
 
    --  Id              String To use As The Client Id. if "", A Random Client Id
    --                  will be generated.
@@ -42,8 +43,8 @@ package Mosquitto is
 
    procedure Reinitialise (Mosq           : aliased in out Handle;
                            ID             : String  := "";
-                           Clean_Sessions : Boolean := True) with
-     Pre => ((Id = "" and then Clean_Sessions) or else Id /= "");
+                           Clean_Sessions : Boolean := True); -- with
+     --  Pre => ((Id = "" and then Clean_Sessions) or else Id /= "");
 
    procedure Username_Pw_Set (Mosq     : in out Handle;
                               Username : String;
@@ -83,7 +84,7 @@ package Mosquitto is
      Pre => Mosq.Is_Initialzed and then not Mosq.Is_Connected;
 
    procedure Connect_Srv (Mosq         : in out Handle;
-                          Host         : String;
+                          Host         : String := "localhost";
                           Keepalive    : Duration := 0.0;
                           Bind_Address : String) with
      Pre => Mosq.Is_Initialzed and then not Mosq.Is_Connected,
