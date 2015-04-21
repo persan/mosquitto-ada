@@ -1,17 +1,16 @@
 
 
-PERFIX_=$(dir $(shell dirname $(shell which gnatls)))
 
 -include Makefile.conf
 
 all:
 
 Makefile.conf:Makefile
-
-	echo "PERFIX=${PREFIX_}">${@}
-	echo "_includedir=${PERFIX_}include/mosquitto">>${@}
-	echo "_libdir=${PERFIX_}lib/mosquitto">>${@}
-	echo "_gprdir=${PERFIX_}lib/gpr">>${@}
+	@if [[ -z `which gnatls` ]] ; then echo No gnatls found check your installation.; -1;fi
+	@echo "PERFIX=$(dir $(shell dirname $(shell which gnatls)))">${@}
+	@echo "_includedir=\$${PERFIX}include/mosquitto">>${@}
+	@echo "_libdir=\$${PERFIX}lib/mosquitto">>${@}
+	@echo "_gprdir=\$${PERFIX}lib/gnat">>${@}
 
 all:compile test
 
@@ -41,6 +40,8 @@ src/gen/mosquitto-mosquitto_h.ads:  # IGNORE
 test:
 	${MAKE} -C tests
 
-testinstall:
-
 clean:
+	rm Makefile.conf
+	rm .obj -rf
+	rm lib -rf
+	rm bin/* -rf
