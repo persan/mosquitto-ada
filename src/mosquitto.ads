@@ -194,15 +194,16 @@ package Mosquitto is
       Level   : Integer;
       Message : String) is null;
 
+   DEFAULT_TIME_OUT : constant Duration := 1.0;
    procedure Do_Loop
      (Mosq : in out Handle;
-      timeout : Duration := 0.0;
+      timeout : Duration := DEFAULT_TIME_OUT;
       max_packets : Natural := 1) with
      Pre => Mosq.Is_Initialzed;
 
    procedure Loop_Forever
      (Mosq : in out Handle;
-      timeout : Duration := 0.0;
+      timeout : Duration := DEFAULT_TIME_OUT;
       max_packets : Natural := 1) with
      Pre => Mosq.Is_Initialzed;
 

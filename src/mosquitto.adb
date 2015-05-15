@@ -103,7 +103,7 @@ package body Mosquitto is
          pragma Unreferenced (Mosq);
          This : constant Handle_Ref := Convert (Obj);
       begin
-         this.Connected.Set (False);
+         This.Connected.Set (False);
          This.Applic.On_Disconnect (This, Integer (Arg3));
       end;  -- /usr/include/mosquitto.h:1099
 
@@ -547,7 +547,7 @@ package body Mosquitto is
    is
       L_Mid   : access Int;
       pragma Import (C, L_Mid);
-      for L_mid'Address use Mid'Address;
+      for L_Mid'Address use Mid'Address;
       L_Sub   : Chars_Ptr := New_String (Topic);
       Ret     : Int;
 
@@ -561,7 +561,7 @@ package body Mosquitto is
 
    procedure Do_Loop
      (Mosq        : in out Handle;
-      Timeout     : Duration := 0.0;
+      Timeout     : Duration := DEFAULT_TIME_OUT;
       Max_Packets : Natural := 1) is
       Ret     : Int;
    begin
@@ -573,12 +573,12 @@ package body Mosquitto is
 
    procedure Loop_Forever
      (Mosq        : in out Handle;
-      Timeout     : Duration := 0.0;
+      Timeout     : Duration := DEFAULT_TIME_OUT;
       Max_Packets : Natural := 1) is
       Ret     : Int;
    begin
       Ret := Mosquitto_Loop_Forever (Mosq        => Mosq.Handle,
-                                     Timeout     =>  Int (Timeout),
+                                     Timeout     => Int (Timeout),
                                      Max_Packets => Int (Max_Packets));
       Retcode_2_Exception (Ret);
    end;
@@ -638,7 +638,7 @@ package body Mosquitto is
             end if;
             raise Mosquitto_Error with "[" & Img (Errno) & "] " &  Exception_Table (Mosq_Err_T (Code)).all &
             (if Mosq_Err_T (Code) = MOSQ_ERR_ERRNO then
-                --  " [" & Gnat.OS_Lib.Errno_Message (Err => Integer (Errno)) & "]"
+             --  " [" & Gnat.OS_Lib.Errno_Message (Err => Integer (Errno)) & "]"
                 " [" & Errno'Img & "]"
              else "");
          else
@@ -656,7 +656,7 @@ package body Mosquitto is
 
    function Is_Connected (Mosq : Handle) return Boolean is
    begin
-      return Mosq.Connected.get;
+      return Mosq.Connected.Get;
    end;
 
 end Mosquitto;
