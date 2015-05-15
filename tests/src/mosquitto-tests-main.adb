@@ -24,9 +24,9 @@ begin
    P.Start;
    C.Set_Handler (A'Unchecked_Access);
    C.Connect ("pi-e");
-   C.Subscribe (Topic => "test");
+   C.Subscribe (Topic => "#");
    C.Publish (Mid => null, Topic => "test", Payload => "[" & GNAT.Time_Stamp.Current_Time & "] Hej", Qos => QOS_0, Retain => False);
-   delay 3.0;
+   delay 60 * 3.0;
    C.Disconnect;
 
 end Mosquitto.Tests.Main;
