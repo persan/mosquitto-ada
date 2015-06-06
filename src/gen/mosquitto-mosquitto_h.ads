@@ -34,19 +34,19 @@ private package mosquitto.mosquitto_h is
   --All rights reserved. This program and the accompanying materials
   --are made available under the terms of the Eclipse Public License v1.0
   --and Eclipse Distribution License v1.0 which accompany this distribution.
-  -- 
+  --
   --The Eclipse Public License is available at
   --   http://www.eclipse.org/legal/epl-v10.html
   --and the Eclipse Distribution License is available at
   --  http://www.eclipse.org/org/documents/edl-v10.php.
-  -- 
+  --
   --Contributors:
   --   Roger Light - initial implementation and documentation.
-  -- 
+  --
 
-  -- LIBMOSQUITTO_VERSION_NUMBER looks like 1002001 for e.g. version 1.2.1.  
-  -- Log types  
-  -- Error values  
+  -- LIBMOSQUITTO_VERSION_NUMBER looks like 1002001 for e.g. version 1.2.1.
+  -- Log types
+  -- Error values
    subtype mosq_err_t is unsigned;
    MOSQ_ERR_CONN_PENDING : constant mosq_err_t := -1;
    MOSQ_ERR_SUCCESS : constant mosq_err_t := 0;
@@ -67,11 +67,11 @@ private package mosquitto.mosquitto_h is
    MOSQ_ERR_EAI : constant mosq_err_t := 15;
    MOSQ_ERR_PROXY : constant mosq_err_t := 16;  -- /usr/include/mosquitto.h:65
 
-  -- Error values  
+  -- Error values
    subtype mosq_opt_t is unsigned;
    MOSQ_OPT_PROTOCOL_VERSION : constant mosq_opt_t := 1;  -- /usr/include/mosquitto.h:87
 
-  -- MQTT specification restricts client ids to a maximum of 23 characters  
+  -- MQTT specification restricts client ids to a maximum of 23 characters
    type mosquitto_message is record
       mid : aliased int;  -- /usr/include/mosquitto.h:98
       topic : Interfaces.C.Strings.chars_ptr;  -- /usr/include/mosquitto.h:99
@@ -92,11 +92,11 @@ private package mosquitto.mosquitto_h is
   -- *	tell the library this is the case, otherwise it makes some optimisations
   -- *	for the single threaded case that may result in unexpected behaviour for
   -- *	the multi threaded case.
-  --  
+  --
 
   --**************************************************
   -- * Important note
-  -- * 
+  -- *
   -- * The following functions that deal with network operations will return
   -- * MOSQ_ERR_SUCCESS on success, but this does not mean that the operation has
   -- * taken place. An attempt will be made to write the network data, but if the
@@ -112,7 +112,7 @@ private package mosquitto.mosquitto_h is
   -- * mosquitto_subscribe()
   -- * mosquitto_unsubscribe()
   -- * mosquitto_publish()
-  -- ************************************************** 
+  -- **************************************************
 
   -- * Function: mosquitto_lib_version
   -- *
@@ -134,7 +134,7 @@ private package mosquitto.mosquitto_h is
   -- *		minor and revision values.
   -- * See Also:
   -- * 	<mosquitto_lib_cleanup>, <mosquitto_lib_init>
-  --  
+  --
 
    function mosquitto_lib_version
      (major : access int;
@@ -153,7 +153,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_lib_cleanup>, <mosquitto_lib_version>
-  --  
+  --
 
    function mosquitto_lib_init return int;  -- /usr/include/mosquitto.h:175
    pragma Import (C, mosquitto_lib_init, "mosquitto_lib_init");
@@ -167,7 +167,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_lib_init>, <mosquitto_lib_version>
-  --  
+  --
 
    function mosquitto_lib_cleanup return int;  -- /usr/include/mosquitto.h:188
    pragma Import (C, mosquitto_lib_cleanup, "mosquitto_lib_cleanup");
@@ -199,7 +199,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_reinitialise>, <mosquitto_destroy>, <mosquitto_user_data_set>
-  --  
+  --
 
    function mosquitto_new
      (id : Interfaces.C.Strings.chars_ptr;
@@ -207,7 +207,7 @@ private package mosquitto.mosquitto_h is
       obj : System.Address) return System.Address;  -- /usr/include/mosquitto.h:219
    pragma Import (C, mosquitto_new, "mosquitto_new");
 
-  -- 
+  --
   -- * Function: mosquitto_destroy
   -- *
   -- * Use to free memory associated with a mosquitto client instance.
@@ -217,7 +217,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_new>, <mosquitto_reinitialise>
-  --  
+  --
 
    procedure mosquitto_destroy (mosq : System.Address);  -- /usr/include/mosquitto.h:232
    pragma Import (C, mosquitto_destroy, "mosquitto_destroy");
@@ -247,7 +247,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_new>, <mosquitto_destroy>
-  --  
+  --
 
    function mosquitto_reinitialise
      (mosq : System.Address;
@@ -256,7 +256,7 @@ private package mosquitto.mosquitto_h is
       obj : System.Address) return int;  -- /usr/include/mosquitto.h:261
    pragma Import (C, mosquitto_reinitialise, "mosquitto_reinitialise");
 
-  -- 
+  --
   -- * Function: mosquitto_will_set
   -- *
   -- * Configure will information for a mosquitto instance. By default, clients do
@@ -278,7 +278,7 @@ private package mosquitto.mosquitto_h is
   -- * 	MOSQ_ERR_INVAL -        if the input parameters were invalid.
   -- * 	MOSQ_ERR_NOMEM -        if an out of memory condition occurred.
   -- * 	MOSQ_ERR_PAYLOAD_SIZE - if payloadlen is too large.
-  --  
+  --
 
    function mosquitto_will_set
      (mosq : System.Address;
@@ -289,7 +289,7 @@ private package mosquitto.mosquitto_h is
       retain : Extensions.bool) return int;  -- /usr/include/mosquitto.h:286
    pragma Import (C, mosquitto_will_set, "mosquitto_will_set");
 
-  -- 
+  --
   -- * Function: mosquitto_will_clear
   -- *
   -- * Remove a previously configured will. This must be called before calling
@@ -301,7 +301,7 @@ private package mosquitto.mosquitto_h is
   -- * Returns:
   -- * 	MOSQ_ERR_SUCCESS - on success.
   -- * 	MOSQ_ERR_INVAL -   if the input parameters were invalid.
-  --  
+  --
 
    function mosquitto_will_clear (mosq : System.Address) return int;  -- /usr/include/mosquitto.h:301
    pragma Import (C, mosquitto_will_clear, "mosquitto_will_clear");
@@ -327,7 +327,7 @@ private package mosquitto.mosquitto_h is
   -- * 	MOSQ_ERR_SUCCESS - on success.
   -- * 	MOSQ_ERR_INVAL -   if the input parameters were invalid.
   -- * 	MOSQ_ERR_NOMEM -   if an out of memory condition occurred.
-  --  
+  --
 
    function mosquitto_username_pw_set
      (mosq : System.Address;
@@ -357,7 +357,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_connect_bind>, <mosquitto_connect_async>, <mosquitto_reconnect>, <mosquitto_disconnect>, <mosquitto_tls_set>
-  --  
+  --
 
    function mosquitto_connect
      (mosq : System.Address;
@@ -370,7 +370,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * Connect to an MQTT broker. This extends the functionality of
   -- * <mosquitto_connect> by adding the bind_address parameter. Use this function
-  -- * if you need to restrict network communication over a particular interface. 
+  -- * if you need to restrict network communication over a particular interface.
   -- *
   -- * Parameters:
   -- * 	mosq -         a valid mosquitto instance.
@@ -392,7 +392,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_connect>, <mosquitto_connect_async>, <mosquitto_connect_bind_async>
-  --  
+  --
 
    function mosquitto_connect_bind
      (mosq : System.Address;
@@ -429,7 +429,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_connect_bind_async>, <mosquitto_connect>, <mosquitto_reconnect>, <mosquitto_disconnect>, <mosquitto_tls_set>
-  --  
+  --
 
    function mosquitto_connect_async
      (mosq : System.Address;
@@ -447,7 +447,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * This extends the functionality of <mosquitto_connect_async> by adding the
   -- * bind_address parameter. Use this function if you need to restrict network
-  -- * communication over a particular interface. 
+  -- * communication over a particular interface.
   -- *
   -- * May be called before or after <mosquitto_loop_start>.
   -- *
@@ -471,7 +471,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_connect_async>, <mosquitto_connect>, <mosquitto_connect_bind>
-  --  
+  --
 
    function mosquitto_connect_bind_async
      (mosq : System.Address;
@@ -490,7 +490,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * This extends the functionality of <mosquitto_connect_async> by adding the
   -- * bind_address parameter. Use this function if you need to restrict network
-  -- * communication over a particular interface. 
+  -- * communication over a particular interface.
   -- *
   -- * May be called before or after <mosquitto_loop_start>.
   -- *
@@ -513,7 +513,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_connect_async>, <mosquitto_connect>, <mosquitto_connect_bind>
-  --  
+  --
 
    function mosquitto_connect_srv
      (mosq : System.Address;
@@ -530,7 +530,7 @@ private package mosquitto.mosquitto_h is
   -- * connection has been lost. It uses the values that were provided in the
   -- * <mosquitto_connect> call. It must not be called before
   -- * <mosquitto_connect>.
-  -- * 
+  -- *
   -- * Parameters:
   -- * 	mosq - a valid mosquitto instance.
   -- *
@@ -549,7 +549,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_connect>, <mosquitto_disconnect>, <mosquitto_reconnect_async>
-  --  
+  --
 
    function mosquitto_reconnect (mosq : System.Address) return int;  -- /usr/include/mosquitto.h:517
    pragma Import (C, mosquitto_reconnect, "mosquitto_reconnect");
@@ -562,7 +562,7 @@ private package mosquitto.mosquitto_h is
   -- * connection has been lost. It uses the values that were provided in the
   -- * <mosquitto_connect> or <mosquitto_connect_async> calls. It must not be
   -- * called before <mosquitto_connect>.
-  -- * 
+  -- *
   -- * Parameters:
   -- * 	mosq - a valid mosquitto instance.
   -- *
@@ -581,7 +581,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_connect>, <mosquitto_disconnect>
-  --  
+  --
 
    function mosquitto_reconnect_async (mosq : System.Address) return int;  -- /usr/include/mosquitto.h:548
    pragma Import (C, mosquitto_reconnect_async, "mosquitto_reconnect_async");
@@ -597,16 +597,16 @@ private package mosquitto.mosquitto_h is
   -- *	MOSQ_ERR_SUCCESS - on success.
   -- * 	MOSQ_ERR_INVAL -   if the input parameters were invalid.
   -- * 	MOSQ_ERR_NO_CONN -  if the client isn't connected to a broker.
-  --  
+  --
 
    function mosquitto_disconnect (mosq : System.Address) return int;  -- /usr/include/mosquitto.h:563
    pragma Import (C, mosquitto_disconnect, "mosquitto_disconnect");
 
-  -- 
+  --
   -- * Function: mosquitto_publish
   -- *
   -- * Publish a message on a given topic.
-  -- * 
+  -- *
   -- * Parameters:
   -- * 	mosq -       a valid mosquitto instance.
   -- * 	mid -        pointer to an int. If not NULL, the function will set this
@@ -633,9 +633,9 @@ private package mosquitto.mosquitto_h is
   -- *                          broker.
   -- * 	MOSQ_ERR_PAYLOAD_SIZE - if payloadlen is too large.
   -- *
-  -- * See Also: 
+  -- * See Also:
   -- *	<mosquitto_max_inflight_messages_set>
-  --  
+  --
 
    function mosquitto_publish
      (mosq : System.Address;
@@ -665,7 +665,7 @@ private package mosquitto.mosquitto_h is
   -- * 	MOSQ_ERR_INVAL -   if the input parameters were invalid.
   -- * 	MOSQ_ERR_NOMEM -   if an out of memory condition occurred.
   -- * 	MOSQ_ERR_NO_CONN - if the client isn't connected to a broker.
-  --  
+  --
 
    function mosquitto_subscribe
      (mosq : System.Address;
@@ -691,7 +691,7 @@ private package mosquitto.mosquitto_h is
   -- * 	MOSQ_ERR_INVAL -   if the input parameters were invalid.
   -- * 	MOSQ_ERR_NOMEM -   if an out of memory condition occurred.
   -- * 	MOSQ_ERR_NO_CONN - if the client isn't connected to a broker.
-  --  
+  --
 
    function mosquitto_unsubscribe
      (mosq : System.Address;
@@ -715,13 +715,13 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_message_free>
-  --  
+  --
 
    function mosquitto_message_copy (dst : access mosquitto_message; src : access constant mosquitto_message) return int;  -- /usr/include/mosquitto.h:662
    pragma Import (C, mosquitto_message_copy, "mosquitto_message_copy");
 
   -- * Function: mosquitto_message_free
-  -- * 
+  -- *
   -- * Completely free a mosquitto_message struct.
   -- *
   -- * Parameters:
@@ -729,7 +729,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_message_copy>
-  --  
+  --
 
    procedure mosquitto_message_free (message : System.Address);  -- /usr/include/mosquitto.h:675
    pragma Import (C, mosquitto_message_free, "mosquitto_message_free");
@@ -753,7 +753,7 @@ private package mosquitto.mosquitto_h is
   -- * <mosquitto_loop_misc>.
   -- *
   -- * Threads:
-  -- *	
+  -- *
   -- * Parameters:
   -- *	mosq -        a valid mosquitto instance.
   -- *	timeout -     Maximum number of milliseconds to wait for network activity
@@ -761,7 +761,7 @@ private package mosquitto.mosquitto_h is
   -- *	              return.  Set negative to use the default of 1000ms.
   -- *	max_packets - this parameter is currently unused and should be set to 1 for
   -- *	              future compatibility.
-  -- * 
+  -- *
   -- * Returns:
   -- *	MOSQ_ERR_SUCCESS -   on success.
   -- * 	MOSQ_ERR_INVAL -     if the input parameters were invalid.
@@ -776,7 +776,7 @@ private package mosquitto.mosquitto_h is
   -- *                       Windows.
   -- * See Also:
   -- *	<mosquitto_loop_forever>, <mosquitto_loop_start>, <mosquitto_loop_stop>
-  --  
+  --
 
    function mosquitto_loop
      (mosq : System.Address;
@@ -816,7 +816,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_loop>, <mosquitto_loop_start>
-  --  
+  --
 
    function mosquitto_loop_forever
      (mosq : System.Address;
@@ -840,7 +840,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_connect_async>, <mosquitto_loop>, <mosquitto_loop_forever>, <mosquitto_loop_stop>
-  --  
+  --
 
    function mosquitto_loop_start (mosq : System.Address) return int;  -- /usr/include/mosquitto.h:777
    pragma Import (C, mosquitto_loop_start, "mosquitto_loop_start");
@@ -865,7 +865,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_loop>, <mosquitto_loop_start>
-  --  
+  --
 
    function mosquitto_loop_stop (mosq : System.Address; force : Extensions.bool) return int;  -- /usr/include/mosquitto.h:801
    pragma Import (C, mosquitto_loop_stop, "mosquitto_loop_stop");
@@ -880,7 +880,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * Returns:
   -- *	The socket for the mosquitto client or -1 on failure.
-  --  
+  --
 
    function mosquitto_socket (mosq : System.Address) return int;  -- /usr/include/mosquitto.h:815
    pragma Import (C, mosquitto_socket, "mosquitto_socket");
@@ -911,7 +911,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_socket>, <mosquitto_loop_write>, <mosquitto_loop_misc>
-  --  
+  --
 
    function mosquitto_loop_read (mosq : System.Address; max_packets : int) return int;  -- /usr/include/mosquitto.h:845
    pragma Import (C, mosquitto_loop_read, "mosquitto_loop_read");
@@ -942,7 +942,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_socket>, <mosquitto_loop_read>, <mosquitto_loop_misc>, <mosquitto_want_write>
-  --  
+  --
 
    function mosquitto_loop_write (mosq : System.Address; max_packets : int) return int;  -- /usr/include/mosquitto.h:875
    pragma Import (C, mosquitto_loop_write, "mosquitto_loop_write");
@@ -966,7 +966,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_socket>, <mosquitto_loop_read>, <mosquitto_loop_write>
-  --  
+  --
 
    function mosquitto_loop_misc (mosq : System.Address) return int;  -- /usr/include/mosquitto.h:898
    pragma Import (C, mosquitto_loop_misc, "mosquitto_loop_misc");
@@ -980,7 +980,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_socket>, <mosquitto_loop_read>, <mosquitto_loop_write>
-  --  
+  --
 
    function mosquitto_want_write (mosq : System.Address) return Extensions.bool;  -- /usr/include/mosquitto.h:911
    pragma Import (C, mosquitto_want_write, "mosquitto_want_write");
@@ -998,7 +998,7 @@ private package mosquitto.mosquitto_h is
   -- * Parameters:
   -- *  mosq -     a valid mosquitto instance.
   -- *  threaded - true if your application is using threads, false otherwise.
-  --  
+  --
 
    function mosquitto_threaded_set (mosq : System.Address; threaded : Extensions.bool) return int;  -- /usr/include/mosquitto.h:928
    pragma Import (C, mosquitto_threaded_set, "mosquitto_threaded_set");
@@ -1017,7 +1017,7 @@ private package mosquitto.mosquitto_h is
   -- *	                            MQTT_PROTOCOL_V31 or MQTT_PROTOCOL_V311. Must
   -- *	                            be set before the client connects. Defaults to
   -- *	                            MQTT_PROTOCOL_V31.
-  --  
+  --
 
    function mosquitto_opts_set
      (mosq : System.Address;
@@ -1069,7 +1069,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_tls_opts_set>, <mosquitto_tls_psk_set>, <mosquitto_tls_insecure_set>
-  --  
+  --
 
    function mosquitto_tls_set
      (mosq : System.Address;
@@ -1107,7 +1107,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_tls_set>
-  --  
+  --
 
    function mosquitto_tls_insecure_set (mosq : System.Address; value : Extensions.bool) return int;  -- /usr/include/mosquitto.h:1025
    pragma Import (C, mosquitto_tls_insecure_set, "mosquitto_tls_insecure_set");
@@ -1142,7 +1142,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_tls_set>
-  --  
+  --
 
    function mosquitto_tls_opts_set
      (mosq : System.Address;
@@ -1174,7 +1174,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_tls_set>
-  --  
+  --
 
    function mosquitto_tls_psk_set
      (mosq : System.Address;
@@ -1183,8 +1183,8 @@ private package mosquitto.mosquitto_h is
       ciphers : Interfaces.C.Strings.chars_ptr) return int;  -- /usr/include/mosquitto.h:1086
    pragma Import (C, mosquitto_tls_psk_set, "mosquitto_tls_psk_set");
 
-  -- 
-  -- * Function: mosquitto_connect_callback_set
+  --
+  -- * Function: mosquitto_connect_callback_setBlåsrör
   -- *
   -- * Set the connect callback. This is called when the broker sends a CONNACK
   -- * message in response to a connection.
@@ -1204,7 +1204,7 @@ private package mosquitto.mosquitto_h is
   -- * * 2 - connection refused (identifier rejected)
   -- * * 3 - connection refused (broker unavailable)
   -- * * 4-255 - reserved for future use
-  --  
+  --
 
    procedure mosquitto_connect_callback_set (mosq : System.Address; on_connect : access procedure
         (arg1 : System.Address;
@@ -1216,7 +1216,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * Set the disconnect callback. This is called when the broker has received the
   -- * DISCONNECT command and has disconnected the client.
-  -- * 
+  -- *
   -- * Parameters:
   -- *  mosq -          a valid mosquitto instance.
   -- *  on_disconnect - a callback function in the following form:
@@ -1228,7 +1228,7 @@ private package mosquitto.mosquitto_h is
   -- *  rc -   integer value indicating the reason for the disconnect. A value of 0
   -- *         means the client has called <mosquitto_disconnect>. Any other value
   -- *         indicates that the disconnect is unexpected.
-  --  
+  --
 
    procedure mosquitto_disconnect_callback_set (mosq : System.Address; on_disconnect : access procedure
         (arg1 : System.Address;
@@ -1240,7 +1240,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * Set the publish callback. This is called when a message initiated with
   -- * <mosquitto_publish> has been sent to the broker successfully.
-  -- * 
+  -- *
   -- * Parameters:
   -- *  mosq -       a valid mosquitto instance.
   -- *  on_publish - a callback function in the following form:
@@ -1250,7 +1250,7 @@ private package mosquitto.mosquitto_h is
   -- *  mosq - the mosquitto instance making the callback.
   -- *  obj -  the user data provided in <mosquitto_new>
   -- *  mid -  the message id of the sent message.
-  --  
+  --
 
    procedure mosquitto_publish_callback_set (mosq : System.Address; on_publish : access procedure
         (arg1 : System.Address;
@@ -1262,7 +1262,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * Set the message callback. This is called when a message is received from the
   -- * broker.
-  -- * 
+  -- *
   -- * Parameters:
   -- *  mosq -       a valid mosquitto instance.
   -- *  on_message - a callback function in the following form:
@@ -1277,7 +1277,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- * 	<mosquitto_message_copy>
-  --  
+  --
 
    procedure mosquitto_message_callback_set (mosq : System.Address; on_message : access procedure
         (arg1 : System.Address;
@@ -1289,7 +1289,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * Set the subscribe callback. This is called when the broker responds to a
   -- * subscription request.
-  -- * 
+  -- *
   -- * Parameters:
   -- *  mosq -         a valid mosquitto instance.
   -- *  on_subscribe - a callback function in the following form:
@@ -1302,7 +1302,7 @@ private package mosquitto.mosquitto_h is
   -- *  qos_count -   the number of granted subscriptions (size of granted_qos).
   -- *  granted_qos - an array of integers indicating the granted QoS for each of
   -- *                the subscriptions.
-  --  
+  --
 
    procedure mosquitto_subscribe_callback_set (mosq : System.Address; on_subscribe : access procedure
         (arg1 : System.Address;
@@ -1316,7 +1316,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * Set the unsubscribe callback. This is called when the broker responds to a
   -- * unsubscription request.
-  -- * 
+  -- *
   -- * Parameters:
   -- *  mosq -           a valid mosquitto instance.
   -- *  on_unsubscribe - a callback function in the following form:
@@ -1326,7 +1326,7 @@ private package mosquitto.mosquitto_h is
   -- *  mosq - the mosquitto instance making the callback.
   -- *  obj -  the user data provided in <mosquitto_new>
   -- *  mid -  the message id of the unsubscribe message.
-  --  
+  --
 
    procedure mosquitto_unsubscribe_callback_set (mosq : System.Address; on_unsubscribe : access procedure
         (arg1 : System.Address;
@@ -1353,7 +1353,7 @@ private package mosquitto.mosquitto_h is
   -- *	        MOSQ_LOG_ERR
   -- *	        MOSQ_LOG_DEBUG
   -- *	str -   the message string.
-  --  
+  --
 
    procedure mosquitto_log_callback_set (mosq : System.Address; on_log : access procedure
         (arg1 : System.Address;
@@ -1395,7 +1395,7 @@ private package mosquitto.mosquitto_h is
   -- * Returns:
   -- *	MOSQ_ERR_SUCCESS - on success.
   -- * 	MOSQ_ERR_INVAL -   if the input parameters were invalid.
-  --  
+  --
 
    function mosquitto_reconnect_delay_set
      (mosq : System.Address;
@@ -1425,7 +1425,7 @@ private package mosquitto.mosquitto_h is
   -- * Returns:
   -- *	MOSQ_ERR_SUCCESS - on success.
   -- * 	MOSQ_ERR_INVAL -   if the input parameters were invalid.
-  --  
+  --
 
    function mosquitto_max_inflight_messages_set (mosq : System.Address; max_inflight_messages : unsigned) return int;  -- /usr/include/mosquitto.h:1295
    pragma Import (C, mosquitto_max_inflight_messages_set, "mosquitto_max_inflight_messages_set");
@@ -1434,12 +1434,12 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * Set the number of seconds to wait before retrying messages. This applies to
   -- * publish messages with QoS>0. May be called at any time.
-  -- * 
+  -- *
   -- * Parameters:
   -- *  mosq -          a valid mosquitto instance.
   -- *  message_retry - the number of seconds to wait for a response before
   -- *                  retrying. Defaults to 20.
-  --  
+  --
 
    procedure mosquitto_message_retry_set (mosq : System.Address; message_retry : unsigned);  -- /usr/include/mosquitto.h:1308
    pragma Import (C, mosquitto_message_retry_set, "mosquitto_message_retry_set");
@@ -1456,7 +1456,7 @@ private package mosquitto.mosquitto_h is
   -- *  mosq - a valid mosquitto instance.
   -- * 	obj -  A user pointer that will be passed as an argument to any callbacks
   -- * 	       that are specified.
-  --  
+  --
 
    procedure mosquitto_user_data_set (mosq : System.Address; obj : System.Address);  -- /usr/include/mosquitto.h:1324
    pragma Import (C, mosquitto_user_data_set, "mosquitto_user_data_set");
@@ -1466,7 +1466,7 @@ private package mosquitto.mosquitto_h is
   -- * Section: SOCKS5 proxy functions
   -- *
   -- * =============================================================================
-  --  
+  --
 
   -- * Function: mosquitto_socks5_set
   -- *
@@ -1481,7 +1481,7 @@ private package mosquitto.mosquitto_h is
   -- *   username - if not NULL, use this username when authenticating with the proxy.
   -- *   password - if not NULL and username is not NULL, use this password when
   -- *              authenticating with the proxy.
-  --  
+  --
 
    function mosquitto_socks5_set
      (mosq : System.Address;
@@ -1496,7 +1496,7 @@ private package mosquitto.mosquitto_h is
   -- * Section: Utility functions
   -- *
   -- * =============================================================================
-  --  
+  --
 
   -- * Function: mosquitto_strerror
   -- *
@@ -1507,7 +1507,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * Returns:
   -- *	A constant string describing the error.
-  --  
+  --
 
    function mosquitto_strerror (mosq_errno : int) return Interfaces.C.Strings.chars_ptr;  -- /usr/include/mosquitto.h:1368
    pragma Import (C, mosquitto_strerror, "mosquitto_strerror");
@@ -1521,7 +1521,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * Returns:
   -- *	A constant string describing the result.
-  --  
+  --
 
    function mosquitto_connack_string (connack_code : int) return Interfaces.C.Strings.chars_ptr;  -- /usr/include/mosquitto.h:1381
    pragma Import (C, mosquitto_connack_string, "mosquitto_connack_string");
@@ -1568,7 +1568,7 @@ private package mosquitto.mosquitto_h is
   -- * > char **topics;
   -- * > int topic_count;
   -- * > int i;
-  -- * > 
+  -- * >
   -- * > mosquitto_sub_topic_tokenise("$SYS/broker/uptime", &topics, &topic_count);
   -- * >
   -- * > for(i=0; i<token_count; i++){
@@ -1577,7 +1577,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_sub_topic_tokens_free>
-  --  
+  --
 
    function mosquitto_sub_topic_tokenise
      (subtopic : Interfaces.C.Strings.chars_ptr;
@@ -1599,7 +1599,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *	<mosquitto_sub_topic_tokenise>
-  --  
+  --
 
    function mosquitto_sub_topic_tokens_free (topics : System.Address; count : int) return int;  -- /usr/include/mosquitto.h:1454
    pragma Import (C, mosquitto_sub_topic_tokens_free, "mosquitto_sub_topic_tokens_free");
@@ -1623,7 +1623,7 @@ private package mosquitto.mosquitto_h is
   -- *	MOSQ_ERR_SUCCESS - on success
   -- * 	MOSQ_ERR_INVAL -   if the input parameters were invalid.
   -- * 	MOSQ_ERR_NOMEM -   if an out of memory condition occurred.
-  --  
+  --
 
    function mosquitto_topic_matches_sub
      (sub : Interfaces.C.Strings.chars_ptr;
@@ -1651,7 +1651,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *   <mosquitto_sub_topic_check>
-  --  
+  --
 
    function mosquitto_pub_topic_check (topic : Interfaces.C.Strings.chars_ptr) return int;  -- /usr/include/mosquitto.h:1501
    pragma Import (C, mosquitto_pub_topic_check, "mosquitto_pub_topic_check");
@@ -1679,7 +1679,7 @@ private package mosquitto.mosquitto_h is
   -- *
   -- * See Also:
   -- *   <mosquitto_sub_topic_check>
-  --  
+  --
 
    function mosquitto_sub_topic_check (topic : Interfaces.C.Strings.chars_ptr) return int;  -- /usr/include/mosquitto.h:1528
    pragma Import (C, mosquitto_sub_topic_check, "mosquitto_sub_topic_check");

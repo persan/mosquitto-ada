@@ -4,3 +4,4 @@ lib/*/
 lib/
 tests/bin
 Makefile.conf
+*/*.npp

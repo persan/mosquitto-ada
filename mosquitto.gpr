@@ -1,11 +1,17 @@
 library project Mosquitto is
 
-   VERSIION := "0.0.1";
+   VERSION := "0.0.2";
+
+   type BUILD_KIND is ("static", "relocatable");
+   BUILD : BUILD_KIND := external("MISQUITTO_BUILD", "static");
 
    for Source_Dirs use ("src/**");
    for Object_Dir use ".obj/" & project'Name;
-   for Library_Name use "mosquitto-ada";
+   for Library_Name use "a-mosquitto";
    for Library_Dir use "lib";
+   for Library_Kind use BUILD;
+
+   for Library_Version use project'Shared_Library_Prefix & project'Library_Name  & "." & VERSION & ".so";--  & project'Shared_Library_Suffix;
 
    package Builder is
       for Default_Switches ("ada") use ("-k", "-j0","-s");
@@ -14,8 +20,6 @@ library project Mosquitto is
    package Compiler is
       for Default_Switches ("ada") use
         ("-gnatwa"
-         , "-g"
-         , "-O0"
          , "-gnatf"
          , "-fstack-check"
          , "-gnatyaAbBcdfhiknOptux"

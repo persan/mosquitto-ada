@@ -3,6 +3,8 @@ with Mosquitto.Mosquitto_H;
 with Interfaces.C.Strings;
 with Ada.Unchecked_Conversion;
 with Gnat.OS_Lib;
+with Interfaces.C.Extensions;
+
 package body Mosquitto is
    use Mosquitto.Mosquitto_H;
    use Interfaces.C;
@@ -81,6 +83,11 @@ package body Mosquitto is
          Obj   : System.Address;
          Level : Int;
          Str   : Interfaces.C.Strings.Chars_Ptr);
+      function Pw_Callback
+        (Buf      : Interfaces.C.Strings.Chars_Ptr;
+         Size     : Int;
+         Rwflag   : Int;
+         Userdata : System.Address) return Int;
    end Ll;
 
    package body LL is
@@ -176,6 +183,29 @@ package body Mosquitto is
             This.Applic.On_Log (This, Integer (Level), Value (Str));
          end if;
       end;
+
+      function Pw_Callback
+        (Buf      : Interfaces.C.Strings.Chars_Ptr;
+         Size     : Int;
+         Rwflag   : Int;
+         Userdata : System.Address) return Int is
+         pragma Unreferenced (Rwflag);
+         This : constant Handle_Ref := Convert (Userdata);
+      begin
+         if This.Pw_Callback /= null then
+            declare
+               Pw : constant String := This.Pw_Callback (This.all);
+            begin
+               if Pw'Length > Size then
+                  return -1;
+               else
+                  Update (Buf, 0, Pw, False);
+                  return Pw'Length;
+               end if;
+            end;
+         end if;
+         return -1;
+      end;
    end Ll;
 
    protected body Guard_Type is
@@ -220,6 +250,87 @@ package body Mosquitto is
    begin
       Ret := Mosquitto_Reinitialise (Mosq.Handle, L_ID, Boolean'Pos (Clean_Sessions), Mosq'Address);
       Free (L_ID);
+      Retcode_2_Exception (Ret);
+   end;
+
+   procedure Will_Set
+     (Mosq       : in out Handle;
+      Mid        : access Message_Id := null;
+      Topic      : String;
+      Payload    : aliased String;
+      Qos        : QoS_Type;
+      Retain     : Boolean)
+   is
+   begin
+      Mosq.Will_Set (Mid, Topic, Payload'Length, Payload'Address, Qos, Retain);
+   end Will_Set;
+
+   -------------
+   -- will_set --
+   -------------
+
+   procedure Will_Set
+     (Mosq       : in out Handle;
+      Mid        : access Message_Id := null;
+      Topic      : String;
+      Payloadlen : Message_Length;
+      Payload    : System.Address;
+      Qos        : QoS_Type;
+      Retain     : Boolean)
+   is
+      L_Mid   : access Int;
+      pragma Import (C, L_Mid);
+      for L_Mid'Address use Mid'Address;
+      L_Topic : Chars_Ptr := New_String (Topic);
+      Ret     : Int;
+   begin
+      Ret := Mosquitto_Will_Set (Mosq       => Mosq.Handle,
+                                 Topic      => L_Topic,
+                                 Payloadlen => Int (Payloadlen),
+                                 Payload    => Payload,
+                                 Qos        => QoS_Type'Pos (Qos),
+                                 Retain     => Boolean'Pos (Retain));
+      Free (L_Topic);
+      Retcode_2_Exception (Ret);
+   end Will_Set;
+
+   -------------
+   -- will_set --
+   -------------
+
+   procedure Will_Set
+     (Mosq       : in out Handle;
+      Mid        : access Message_Id := null;
+      Topic      : String;
+      Payload    : aliased Ada.Streams.Stream_Element_Array;
+      Qos        : QoS_Type;
+      Retain     : Boolean)
+   is
+   begin
+      Mosq.Will_Set (Mid, Topic, Payload'Length, Payload'Address, Qos, Retain);
+   end Will_Set;
+
+   ---------------------
+   -- Publish_Generic --
+   ---------------------
+
+   procedure Will_Set_Generic (Mosq       : in out Handle;
+                               Mid        : access Message_Id := null;
+                               Topic      : String;
+                               Payload    : aliased Msg_Type;
+                               Qos        : QoS_Type;
+                               Retain     : Boolean)
+
+   is
+   begin
+      Mosq.Will_Set (Mid, Topic, Payload'Size / Ada.Streams.Stream_Element'Size, Payload'Address, Qos, Retain);
+   end Will_Set_Generic;
+
+   procedure Will_Clear
+     (Mosq       : in out Handle) is
+      Ret        : Int;
+   begin
+      Ret := Mosquitto_Will_Clear (Mosq.Handle);
       Retcode_2_Exception (Ret);
    end;
 
@@ -457,7 +568,7 @@ package body Mosquitto is
      (Mosq       : in out Handle;
       Mid        : access Message_Id := null;
       Topic      : String;
-      Payloadlen : Natural;
+      Payloadlen : Message_Length;
       Payload    : System.Address;
       Qos        : QoS_Type;
       Retain     : Boolean)
@@ -528,10 +639,11 @@ package body Mosquitto is
       Ret     : Int;
 
    begin
-      Ret := Mosquitto_Subscribe (Mosq       => Mosq.Handle,
-                                  Mid        => L_Mid,
-                                  Sub        => L_Sub,
-                                  Qos        => QoS_Type'Pos (Qos));
+      Ret := Mosquitto_Subscribe
+        (Mosq       => Mosq.Handle,
+         Mid        => L_Mid,
+         Sub        => L_Sub,
+         Qos        => QoS_Type'Pos (Qos));
       Free (L_Sub);
       Retcode_2_Exception (Ret);
    end Subscribe;
@@ -559,6 +671,68 @@ package body Mosquitto is
       Retcode_2_Exception (Ret);
    end UnSubscribe;
 
+   procedure Tls_Set
+     (Mosq        : in out Handle;
+      Cafile      : String;
+      Capath      : String;
+      Certfile    : String;
+      Keyfile     : String;
+      Pw_Callback : Pw_Callback_Function) is
+      Ret           : Int;
+      L_Cafile      : Interfaces.C.Strings.Chars_Ptr := New_String (Cafile);
+      L_Capath      : Interfaces.C.Strings.Chars_Ptr := New_String (Capath);
+      L_Certfile    : Interfaces.C.Strings.Chars_Ptr := New_String (Certfile);
+      L_Keyfile     : Interfaces.C.Strings.Chars_Ptr := New_String (Keyfile);
+
+   begin
+      Mosq.Pw_Callback := Pw_Callback;
+      Ret := Mosquitto_Tls_Set (Mosq.Handle, L_Cafile, L_Capath, L_Certfile, L_Keyfile, LL.Pw_Callback'Access);
+      Free (L_Cafile);
+      Free (L_Capath);
+      Free (L_Certfile);
+      Free (L_Keyfile);
+      Retcode_2_Exception (Ret);
+   end;
+
+   procedure Tls_Insecure_Set (Mosq : Handle; Value : Boolean) is
+      Ret     : Int;
+   begin
+      Ret := Mosquitto_Tls_Insecure_Set (Mosq.Handle, Boolean'Pos (Value));
+      Retcode_2_Exception (Ret);
+   end;
+
+   procedure Tls_Opts_Set
+     (Mosq        : Handle;
+      Cert_Reqs   : Verification_Mode;
+      Tls_Version : String;
+      Ciphers     : String) is
+      Ret            : Int;
+      L_Tls_Version  : Interfaces.C.Strings.Chars_Ptr := New_String (Tls_Version);
+      L_Ciphers      : Interfaces.C.Strings.Chars_Ptr := New_String (Ciphers);
+   begin
+      Ret := Mosquitto_Tls_Opts_Set (Mosq.Handle, Verification_Mode'Pos (Cert_Reqs), L_Tls_Version, L_Ciphers);
+      Free (L_Tls_Version);
+      Free (L_Ciphers);
+      Retcode_2_Exception (Ret);
+   end;
+
+   procedure Tls_Psk_Set
+     (Mosq     : Handle;
+      Psk      : String;
+      Identity : String;
+      Ciphers  : String) is
+      Ret        : Int;
+      L_Psk      : Interfaces.C.Strings.Chars_Ptr := New_String (Psk);
+      L_Identity : Interfaces.C.Strings.Chars_Ptr := New_String (Identity);
+      L_Ciphers  : Interfaces.C.Strings.Chars_Ptr := New_String (Ciphers);
+   begin
+      Ret := Mosquitto_Tls_Psk_Set (Mosq.Handle, L_Psk, L_Identity, L_Ciphers);
+      Free (L_Psk);
+      Free (L_Identity);
+      Free (L_Ciphers);
+      Retcode_2_Exception (Ret);
+   end;
+
    procedure Do_Loop
      (Mosq        : in out Handle;
       Timeout     : Duration := DEFAULT_TIME_OUT;
@@ -566,7 +740,7 @@ package body Mosquitto is
       Ret     : Int;
    begin
       Ret := Mosquitto_Loop (Mosq        => Mosq.Handle,
-                             Timeout     =>  Int (Timeout),
+                             Timeout     => Int (Timeout),
                              Max_Packets => Int (Max_Packets));
       Retcode_2_Exception (Ret);
    end;
@@ -580,6 +754,21 @@ package body Mosquitto is
       Ret := Mosquitto_Loop_Forever (Mosq        => Mosq.Handle,
                                      Timeout     => Int (Timeout),
                                      Max_Packets => Int (Max_Packets));
+      Retcode_2_Exception (Ret);
+   end;
+
+   procedure Reconnect_Delay_Set
+     (Mosq                : in out Handle;
+      Reconnect_Delay     : Duration := 1.0;
+      Reconnect_Delay_Max : Duration := 30.0;
+      Exponential_Backoff : Boolean := True) is
+      Ret     : Int;
+   begin
+      Ret := Mosquitto_Reconnect_Delay_Set
+        (Mosq                          => Mosq.Handle,
+         Reconnect_Delay               => Unsigned (Reconnect_Delay),
+         Reconnect_Delay_Max           => Unsigned (Reconnect_Delay_Max),
+         Reconnect_Exponential_Backoff => Extensions.Bool (Boolean'Pos (Exponential_Backoff)));
       Retcode_2_Exception (Ret);
    end;
 

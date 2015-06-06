@@ -18,15 +18,16 @@ procedure Mosquitto.Tests.Main is
    C : aliased Handle;
    A : aliased App.Application;
    P : Pump (C'Access);
+   function Getpid return Integer;
+   pragma Import (C, GetPid, "getpid");
 begin
-
-   C.Initialize (GNAT.Sockets.Host_Name & "/" & Ada.Directories.Simple_Name (Ada.Command_Line.Command_Name));
+   C.Initialize (GNAT.Sockets.Host_Name & "/" & Ada.Directories.Simple_Name (Ada.Command_Line.Command_Name) & Getpid'Img);
    P.Start;
    C.Set_Handler (A'Unchecked_Access);
    C.Connect ("pi-e");
    C.Subscribe (Topic => "#");
    C.Publish (Mid => null, Topic => "test", Payload => "[" & GNAT.Time_Stamp.Current_Time & "] Hej", Qos => QOS_0, Retain => False);
-   delay 60 * 3.0;
+   delay 60 * 60.0 * 24.0;
    C.Disconnect;
 
 end Mosquitto.Tests.Main;
