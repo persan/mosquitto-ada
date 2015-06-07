@@ -1,4 +1,4 @@
-package Mosquitto.Tests.App is
+package Mosquitto.Logging_Application is
    type Application is new Application_Interface with null record;
    overriding procedure On_Connect
      (Self   : not null access Application;
@@ -44,4 +44,4 @@ package Mosquitto.Tests.App is
      (Self    : not null access Application;
       Item    : String);
 
-end Mosquitto.Tests.App;
+end Mosquitto.Logging_Application;

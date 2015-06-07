@@ -1,8 +1,8 @@
-with Mosquitto.Tests.App;
 with GNAT.Time_Stamp;
 with GNAT.Sockets;
 with Ada.Directories;
 with Ada.Command_Line;
+with Mosquitto.Logging_Application;
 procedure Mosquitto.Tests.Main is
 
    task type Pump (Connection : access Handle) is
@@ -16,7 +16,7 @@ procedure Mosquitto.Tests.Main is
    end Pump;
 
    C : aliased Handle;
-   A : aliased App.Application;
+   A : aliased Logging_Application.Application;
    P : Pump (C'Access);
    function Getpid return Integer;
    pragma Import (C, GetPid, "getpid");
