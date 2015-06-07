@@ -2,47 +2,12 @@ pragma Ada_2012;
 with Mosquitto.Mosquitto_H;
 with Interfaces.C.Strings;
 with Ada.Unchecked_Conversion;
-with Gnat.OS_Lib;
 with Interfaces.C.Extensions;
 
 package body Mosquitto is
    use Mosquitto.Mosquitto_H;
    use Interfaces.C;
    use Interfaces.C.Strings;
-   package Error_Text is
-      MOSQ_ERR_NOMEM         : aliased constant String := "out of memory";
-      MOSQ_ERR_PROTOCOL      : aliased constant String := "protocol error communicating with the broker";
-      MOSQ_ERR_INVAL         : aliased constant String := "input parameters invalid";
-      MOSQ_ERR_NO_CONN       : aliased constant String := "client isn’t connected";
-      MOSQ_ERR_CONN_REFUSED  : aliased constant String := "MOSQ_ERR_NOT_FOUND";
-      MOSQ_ERR_NOT_FOUND     : aliased constant String := "MOSQ_ERR_NOT_FOUND";
-      MOSQ_ERR_CONN_LOST     : aliased constant String := "connection to the broker lost";
-      MOSQ_ERR_TLS           : aliased constant String := "MOSQ_ERR_TLS";
-      MOSQ_ERR_PAYLOAD_SIZE  : aliased constant String := "payloadlen is too large";
-      MOSQ_ERR_NOT_SUPPORTED : aliased constant String := "thread support is not available.";
-      MOSQ_ERR_AUTH          : aliased constant String := "MOSQ_ERR_AUTH";
-      MOSQ_ERR_ACL_DENIED    : aliased constant String := "MOSQ_ERR_ACL_DENIED";
-      MOSQ_ERR_UNKNOWN       : aliased constant String := "MOSQ_ERR_UNKNOWN";
-      MOSQ_ERR_ERRNO         : aliased constant String := "MOSQ_ERR_ERRNO";
-      MOSQ_ERR_EAI           : aliased constant String := "MOSQ_ERR_EAI";
-   end Error_Text;
-   type String_Access is access constant String;
-   Exception_Table : constant array (MOSQ_ERR_NOMEM .. MOSQ_ERR_EAI) of String_Access :=
-                       (MOSQ_ERR_NOMEM         => Error_Text.MOSQ_ERR_NOMEM'Access,
-                        MOSQ_ERR_PROTOCOL      => Error_Text.MOSQ_ERR_PROTOCOL'Access,
-                        MOSQ_ERR_INVAL         => Error_Text.MOSQ_ERR_INVAL'Access,
-                        MOSQ_ERR_NO_CONN       => Error_Text.MOSQ_ERR_NO_CONN'Access,
-                        MOSQ_ERR_CONN_REFUSED  => Error_Text.MOSQ_ERR_CONN_REFUSED'Access,
-                        MOSQ_ERR_NOT_FOUND     => Error_Text.MOSQ_ERR_NOT_FOUND'Access,
-                        MOSQ_ERR_CONN_LOST     => Error_Text.MOSQ_ERR_CONN_LOST'Access,
-                        MOSQ_ERR_TLS           => Error_Text.MOSQ_ERR_TLS'Access,
-                        MOSQ_ERR_PAYLOAD_SIZE  => Error_Text.MOSQ_ERR_PAYLOAD_SIZE'Access,
-                        MOSQ_ERR_NOT_SUPPORTED => Error_Text.MOSQ_ERR_NOT_SUPPORTED'Access,
-                        MOSQ_ERR_AUTH          => Error_Text.MOSQ_ERR_AUTH'Access,
-                        MOSQ_ERR_ACL_DENIED    => Error_Text.MOSQ_ERR_ACL_DENIED'Access,
-                        MOSQ_ERR_UNKNOWN       => Error_Text.MOSQ_ERR_UNKNOWN'Access,
-                        MOSQ_ERR_ERRNO         => Error_Text.MOSQ_ERR_ERRNO'Access,
-                        MOSQ_ERR_EAI           => Error_Text.MOSQ_ERR_EAI'Access);
 
    package LL is
 
@@ -812,31 +777,19 @@ package body Mosquitto is
    -------------------------
 
    procedure Retcode_2_Exception (Code : Interfaces.C.Int) is
-      Errno : Mosq_Err_T := Mosq_Err_T (Code);
-      function Img (E    : Mosq_Err_T) return String is
+      function Img (E    : Interfaces.C.Int) return String is
          Ret : constant String := E'Img;
       begin
          return Ret (Ret'First + 1 .. Ret'Last);
       end;
 
    begin
-      if Errno /= MOSQ_ERR_SUCCESS then
-         if Errno in Exception_Table'Range then
-            if Errno = MOSQ_ERR_ERRNO then
-               Errno := Mosq_Err_T (Gnat.OS_Lib.Errno);
-            end if;
-            raise Mosquitto_Error with "[" & Img (Errno) & "] " &  Exception_Table (Mosq_Err_T (Code)).all &
-            (if Mosq_Err_T (Code) = MOSQ_ERR_ERRNO then
-             --  " [" & Gnat.OS_Lib.Errno_Message (Err => Integer (Errno)) & "]"
-                " [" & Errno'Img & "]"
-             else "");
-         else
-            raise Program_Error with "Unknown code:" & Errno'Img;
-         end if;
+      if Code /= Int (MOSQ_ERR_SUCCESS) then
+         raise Mosquitto_Error with "[" & Img (Code) & "] " &  Value (Mosquitto.Mosquitto_H.Mosquitto_Strerror (Code));
       end if;
    end Retcode_2_Exception;
 
-   C : Controler with Unreferenced;
+   Package_Initialization_Controler : Controler with Unreferenced;
 
    function Is_Initialzed (Mosq          : Handle) return Boolean is
    begin

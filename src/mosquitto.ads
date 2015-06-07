@@ -7,6 +7,8 @@ package Mosquitto is
 
    DEFAULT_PORT       : constant := 1883;
    Max_Message_Length : constant := 16#0FFF_FFFF#;
+   ID_MAX_LENGTH      : constant := 23;
+
    subtype Message_Length is Natural range 0 .. Max_Message_Length;
 
    type QoS_Type is
@@ -31,7 +33,7 @@ package Mosquitto is
    procedure Initialize (Mosq           : in out Handle;
                          ID             : String;
                          Clean_Sessions : Boolean := True)  with
-     Pre => ((Id = "" and then Clean_Sessions) or else Id /= "") and then not Mosq.Is_Initialzed;
+     Pre => ((Id = "" and then Clean_Sessions) or else Id /= "") and then not Mosq.Is_Initialzed and then Id'Length <= ID_MAX_LENGTH;
 
    --  Id              String To use As The Client Id. if "", A Random Client Id
    --                  will be generated.
@@ -46,7 +48,7 @@ package Mosquitto is
    procedure Reinitialise (Mosq           : in out Handle;
                            ID             : String  := "";
                            Clean_Sessions : Boolean := True) with
-     Pre => ((Id = "" and then Clean_Sessions) or else Id /= "") and then Mosq.Is_Initialzed;
+     Pre => ((Id = "" and then Clean_Sessions) or else Id /= "") and then Mosq.Is_Initialzed and then Id'Length <= ID_MAX_LENGTH;
    --  Id              String To use As The Client Id. if "", A Random Client Id
    --                  will be generated.
    --  CLean_Session - Set To True To Instruct The Broker To Clean all Messages
