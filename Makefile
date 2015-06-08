@@ -51,7 +51,7 @@ clean:
 	rm lib -rf
 	rm bin/* -rf
 check:
-	@if [ ! -z "git status --porcelain" ] ; then \
+	@if [ ! -z "`git status --porcelain`" ] ; then \
 		echo Folder is not clean;\
 		git status;\
 		exit -1;\
