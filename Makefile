@@ -1,5 +1,7 @@
-
-
+PROJECT=mosquitto-ada
+VERSION=${PROJECT}-0.0.0
+USER=$(shell cat ~/.ssh/github.user | sed "s- --")
+ACCESS=$(shell cat ~/.ssh/github.token | sed "s- --")
 
 -include Makefile.conf
 
@@ -45,3 +47,17 @@ clean:
 	rm .obj -rf
 	rm lib -rf
 	rm bin/* -rf
+check:
+	@if [ ! -z "git status --porcelain" ] ; then \
+		echo Folder is not clean;\
+		git status;\
+		exit -1;\
+	else\
+		echo ready for release ${VERSION};\
+	fi
+	git pull -q
+	git push -q
+
+release:
+	curl --data '$(shell sed "s/@VERSION@/${VERSION}/" github-version.in)' \
+		"https://api.github.com/repos/${USER}/${PROJECT}/releases?access_token=${ACCESS}"
