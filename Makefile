@@ -61,6 +61,6 @@ check:
 	git pull -q
 	git push -q
 
-release:
+release:check
 	curl --data '$(shell sed -e "s/@VERSION@/${VERSION}/" -e "s/@TAG@/${TAG}/" github-version.in)' \
 		"https://api.github.com/repos/${USER}/${PROJECT}/releases?access_token=${ACCESS}"
