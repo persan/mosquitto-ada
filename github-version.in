@@ -1,6 +1,6 @@
-{"tag_name": "@VERSION@",
-	"target_commitish": "master",
+{"target_commitish": "master",
 	"name": "@VERSION@",
+        "tag_name" : "@TAG@",
 	"body": "Release of version @VERSION@",
 	"draft": false,
 	"prerelease": true}

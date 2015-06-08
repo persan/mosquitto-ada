@@ -1,7 +1,10 @@
 PROJECT=mosquitto-ada
-VERSION=${PROJECT}-0.0.0
+TAG=1.0.0
+
+VERSION=${PROJECT}-${TAG}
 USER=$(shell cat ~/.ssh/github.user | sed "s- --")
 ACCESS=$(shell cat ~/.ssh/github.token | sed "s- --")
+
 
 -include Makefile.conf
 
@@ -59,5 +62,5 @@ check:
 	git push -q
 
 release:
-	curl --data '$(shell sed "s/@VERSION@/${VERSION}/" github-version.in)' \
+	curl --data '$(shell sed -e "s/@VERSION@/${VERSION}/" -e "s/@TAG@/${TAG}/" github-version.in)' \
 		"https://api.github.com/repos/${USER}/${PROJECT}/releases?access_token=${ACCESS}"
