@@ -1,5 +1,5 @@
 PROJECT=mosquitto-ada
-TAG=1.0.0
+TAG=$(shell if [[ -e bin/version ]] ; then bin/version ; else echo "----";fi)
 
 VERSION=${PROJECT}-${TAG}
 USER=$(shell cat ~/.ssh/github.user | sed "s- --")
@@ -10,7 +10,7 @@ ACCESS=$(shell cat ~/.ssh/github.token | sed "s- --")
 
 all:
 
-Makefile.conf:Makefile
+Makefile.conf:Makefile  # IGNORE
 	@if [[ -z `which gnatls` ]] ; then echo No gnatls found check your installation.; -1;fi
 	@echo "PERFIX=$(dir $(shell dirname $(shell which gnatls)))">${@}
 	@echo "_includedir=\$${PERFIX}include/mosquitto">>${@}
@@ -20,7 +20,7 @@ Makefile.conf:Makefile
 all:compile test
 
 compile:
-	gprbuild -p -P mosquitto.gpr
+	gprbuild -p -P mosquitto-helpers.gpr
 
 install:
 	mkdir -p ${INSTALLDIR}${_includedir}
@@ -43,6 +43,7 @@ src/gen/mosquitto-mosquitto_h.ads:  # IGNORE
 
 
 test:
+	echo ${TAG}
 	${MAKE} -C tests
 
 clean:

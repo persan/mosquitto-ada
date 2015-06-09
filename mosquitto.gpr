@@ -1,6 +1,6 @@
 library project Mosquitto is
 
-   VERSION := "0.0.2";
+   VERSION := "1.0.1";
 
    type BUILD_KIND is ("static", "relocatable");
    BUILD : BUILD_KIND := external("MISQUITTO_BUILD", "static");

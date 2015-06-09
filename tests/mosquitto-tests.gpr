@@ -1,4 +1,5 @@
 with "../mosquitto.gpr";
+with "../mosquitto-helpers.gpr";
 
 project Mosquitto.Tests is
 
