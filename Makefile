@@ -2,8 +2,8 @@ PROJECT=mosquitto-ada
 TAG=$(shell if [[ -e bin/version ]] ; then bin/version ; else echo "----";fi)
 
 VERSION=${PROJECT}-${TAG}
-USER=$(shell if [[ -e  ~/.ssh/github.user ]] ; then cat ~/.ssh/github.user | sed "s- --"; fi)
-ACCESS=$(shell if [[ -e ~/.ssh/github.token ]] ; then cat ~/.ssh/github.token | sed "s- --"; fi)
+USER=$(shell python ./helper.py ~/.ssh/github.user)
+ACCESS=$(shell python ./helper.py ~/.ssh/github.token)
 
 
 -include Makefile.conf
@@ -65,3 +65,7 @@ check:
 release:check
 	curl --data '$(shell sed -e "s/@VERSION@/${VERSION}/" -e "s/@TAG@/${TAG}/" github-version.in)' \
 		"https://api.github.com/repos/${USER}/${PROJECT}/releases?access_token=${ACCESS}"
+xx:
+	@echo "USER    ${USER}"
+	@echo "ACCESS  ${ACCESS}"
+	@echo "TAG     ${TAG}"

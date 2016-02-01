@@ -27,7 +27,7 @@ begin
    C.Connect ("pi-e");
    C.Subscribe (Topic => "#");
    C.Publish (Mid => null, Topic => "test", Payload => "[" & GNAT.Time_Stamp.Current_Time & "] Hej", Qos => QOS_0, Retain => False);
-   delay 60 * 60.0 * 24.0;
+   delay 30.0;
    C.Disconnect;
 
 end Mosquitto.Tests.Main;
