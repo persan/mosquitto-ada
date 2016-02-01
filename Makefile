@@ -2,8 +2,8 @@ PROJECT=mosquitto-ada
 TAG=$(shell if [[ -e bin/version ]] ; then bin/version ; else echo "----";fi)
 
 VERSION=${PROJECT}-${TAG}
-USER=$(shell cat ~/.ssh/github.user | sed "s- --")
-ACCESS=$(shell cat ~/.ssh/github.token | sed "s- --")
+USER=$(shell if [[ -e  ~/.ssh/github.user ]] ; then cat ~/.ssh/github.user | sed "s- --"; fi)
+ACCESS=$(shell if [[ -e ~/.ssh/github.token ]] ; then cat ~/.ssh/github.token | sed "s- --"; fi)
 
 
 -include Makefile.conf

@@ -3,19 +3,27 @@ with "../mosquitto-helpers.gpr";
 
 project Mosquitto.Tests is
 
-   for Source_Dirs use ("src/**");
-   for Object_Dir use ".obj/" & project'Name;
-   for exec_dir use "bin";
-   for Main use ("mosquitto-tests-main.adb");
+        -- for Target use "arm-linux-gnueabihf";
 
-   package Builder is
-      for Default_Switches ("ada") use Mosquitto.Builder'Default_Switches ("ada");
-   end  Builder;
+        for Languages use ("Ada");
+        for Source_Dirs use ("src/**");
+        for Object_Dir use ".obj/" &project'target&"/"& project'Name;
+        for exec_dir use "bin/" &project'target;
+        for Main use ("mosquitto-tests-main.adb");
 
-   package Compiler renames Mosquitto.Compiler;
+        package Builder is
+                for Default_Switches ("ada") use Mosquitto.Builder'Default_Switches ("ada");
+        end  Builder;
 
-   package Binder is
-      for Default_Switches ("ada") use ("-E");
-   end Binder;
+        package gnatls is
+        end Gnatls;
+        package Ide is
+                -- for Gnatlist use "arm-linux-gnueabihf-gnatls";
+        end Ide;
+        package Compiler renames Mosquitto.Compiler;
+
+        package Binder is
+                for Default_Switches ("ada") use ("-E");
+        end Binder;
 
 end Mosquitto.Tests;
