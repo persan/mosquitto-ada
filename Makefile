@@ -1,5 +1,5 @@
 PROJECT=mosquitto-ada
-TAG=$(shell if [[ -e bin/version ]] ; then bin/version ; else echo "----";fi)
+TAG=$(shell python ./helper.py bin/version)
 
 VERSION=${PROJECT}-${TAG}
 USER=$(shell python ./helper.py ~/.ssh/github.user)
@@ -20,15 +20,19 @@ Makefile.conf:Makefile  # IGNORE
 all:compile test
 
 compile:
+	gprbuild -p -P mosquitto.gpr -XMISQUITTO_BUILD=static
+	gprbuild -p -P mosquitto.gpr -XMISQUITTO_BUILD=relocatable
 	gprbuild -p -P mosquitto-helpers.gpr
 
 install:
-	mkdir -p ${INSTALLDIR}${_includedir}
-	mkdir -p ${INSTALLDIR}${_libdir}
-	mkdir -p ${INSTALLDIR}${_gprdir}
-	cp `find src -name "*.ad?"` ${INSTALLDIR}${_includedir}/
-	cp mosquitto.gpr.in ${INSTALLDIR}${_gprdir}/mosquitto.gpr
-	cp lib/*.ali lib/*.a ${INSTALLDIR}${_libdir}/
+	gprinstall -p -P mosquitto.gpr -XMISQUITTO_BUILD=static      --build-var=MISQUITTO_BUILD --build-name=static      --prefix=_
+	gprinstall -p -P mosquitto.gpr -XMISQUITTO_BUILD=relocatable --build-var=MISQUITTO_BUILD --build-name=relocatable --prefix=_
+#	mkdir -p ${INSTALLDIR}${_includedir}
+#	mkdir -p ${INSTALLDIR}${_libdir}
+#	mkdir -p ${INSTALLDIR}${_gprdir}
+#	cp `find src -name "*.ad?"` ${INSTALLDIR}${_includedir}/
+#	cp mosquitto.gpr.in ${INSTALLDIR}${_gprdir}/mosquitto.gpr
+#	cp lib/*.ali lib/*.a ${INSTALLDIR}${_libdir}/
 
 
 gen:src/gen/mosquitto-mosquitto_h.ads
