@@ -25,8 +25,8 @@ compile:
 	gprbuild -p -P mosquitto-helpers.gpr
 
 install:
-	gprinstall -p -P mosquitto.gpr -XMISQUITTO_BUILD=static      --build-var=MISQUITTO_BUILD --build-name=static      --prefix=_
-	gprinstall -p -P mosquitto.gpr -XMISQUITTO_BUILD=relocatable --build-var=MISQUITTO_BUILD --build-name=relocatable --prefix=_
+	gprinstall -v -f -p -P mosquitto.gpr -XMISQUITTO_BUILD=static      --build-var=MISQUITTO_BUILD --build-name=static      
+	gprinstall -v -f -p -P mosquitto.gpr -XMISQUITTO_BUILD=relocatable --build-var=MISQUITTO_BUILD --build-name=relocatable 
 #	mkdir -p ${INSTALLDIR}${_includedir}
 #	mkdir -p ${INSTALLDIR}${_libdir}
 #	mkdir -p ${INSTALLDIR}${_gprdir}
