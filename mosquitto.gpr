@@ -4,17 +4,12 @@ library project Mosquitto is
 
    for Languages use ("Ada","Makefile");
 
-   type BUILD_KIND is ("static", "relocatable");
-
-   BUILD : BUILD_KIND := external("MISQUITTO_BUILD", "static");
 
    for Source_Dirs use ("src/**",".");
-   for Object_Dir use ".obj/" & project'target& "/"& project'Name;
+   for Object_Dir use ".obj/" & "/"& project'Name;
    for Library_Name use "a-mosquitto";
-   for Library_Dir use "lib/" & project'Target;
-   for Library_Kind use BUILD;
+   for Library_Dir use "lib";
 
-   for Library_Version use project'Shared_Library_Prefix & project'Library_Name  & "." & VERSION & ".so";--  & project'Shared_Library_Suffix;
 
    package Builder is
       for Default_Switches ("ada") use ("-k", "-j0", "-s");
@@ -38,7 +33,9 @@ library project Mosquitto is
       for Implementation_Suffix("Makefile") use ".mk";
       for Implementation_Exceptions("Makefile") use ("Makefile");
    end Naming;
+   
    package linker is
       for Linker_Options use ("-lmosquitto");
    end Linker;
+   
 end Mosquitto;

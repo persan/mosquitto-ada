@@ -1,9 +1,26 @@
 library project Mosquitto is
 
+   version         := "@_VERSION_@";
+
+   type BUILD_KIND is ("relocatable","static");
+   BUILD : BUILD_KIND := external("MISQUITTO_BUILD", "relocatable");
+
 
    for Source_Dirs use ("../../include/mosquitto");
-   for Library_Name use "mosquitto-ada";
-   for Library_Dir use "../mosquitto";
+   for Library_Dir use "../../lib/mosquitto."  & BUILD;
+   for Library_Kind use "relocatable";
+
+   for Library_Name use "a-mosquitto";
+   for Library_Version use Library_Name & "."& version & ".so";
+
+   package Linker is
+      for Linker_Options use ("-lmosquitto");
+   end Linker;
+
+   package Install is
+      for Active use "False";
+   end Install;
+
    for Externally_Built use "True";
 
 end Mosquitto;

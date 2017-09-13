@@ -14,45 +14,46 @@ package body Mosquitto is
       procedure On_Connect
         (Mosq : System.Address;
          Obj  : System.Address;
-         Arg3 : Int);  -- /usr/include/mosquitto.h:1079
+         Arg3 : Int) with Convention => C;  -- /usr/include/mosquitto.h:1079
 
       procedure On_Disconnect
         (Mosq : System.Address;
          Obj  : System.Address;
-         Arg3 : Int);  -- /usr/include/mosquitto.h:1099
+         Arg3 : Int) with Convention => C;  -- /usr/include/mosquitto.h:1099
 
       procedure On_Publish
         (Mosq : System.Address;
          Obj  : System.Address;
-         Arg3 : Int);  -- /usr/include/mosquitto.h:1117
+         Arg3 : Int) with Convention => C;  -- /usr/include/mosquitto.h:1117
 
       procedure On_Message
         (Mosq : System.Address;
          Obj  : System.Address;
-         Msg  : access constant Mosquitto_H.Mosquitto_Message);  -- /usr/include/mosquitto.h:1140
+         Msg  : access constant Mosquitto_H.Mosquitto_Message) with Convention => C;  -- /usr/include/mosquitto.h:1140
 
       procedure On_Subscribe
         (Mosq        : System.Address;
          Obj         : System.Address;
          Mid         : Int;
          Qos_Count   : Int;
-         Granted_Qos : access Int);
+         Granted_Qos : access Int) with Convention => C;
 
       procedure On_Unsubscribe
         (Mosq : System.Address;
          Obj  : System.Address;
-         Mid  : Int);
+         Mid  : Int) with Convention => C;
 
       procedure On_Log
         (Mosq  : System.Address;
          Obj   : System.Address;
          Level : Int;
-         Str   : Interfaces.C.Strings.Chars_Ptr);
+         Str   : Interfaces.C.Strings.Chars_Ptr) with Convention => C;
+
       function Pw_Callback
         (Buf      : Interfaces.C.Strings.Chars_Ptr;
          Size     : Int;
          Rwflag   : Int;
-         Userdata : System.Address) return Int;
+         Userdata : System.Address) return Int with Convention => C;
    end Ll;
 
    package body LL is
