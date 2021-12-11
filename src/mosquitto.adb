@@ -107,7 +107,7 @@ package body Mosquitto is
             Topic   => Value (Msg.Topic),
             Payload => Ada.Streams.Stream_Element_Array (Buffer),
             QoS     => QoS_Type'Val (Msg.Qos),
-            Retain  => Msg.Retain /= 0);
+            Retain  => Boolean (Msg.Retain));
       end;  -- /usr/include/mosquitto.h:1140
 
       procedure On_Subscribe
@@ -201,7 +201,7 @@ package body Mosquitto is
    is
       L_ID : Interfaces.C.Strings.Chars_Ptr := (if Id = "" then Null_Ptr else New_String (ID));
    begin
-      Mosq.Handle := Mosquitto_New (L_ID, Boolean'Pos (Clean_Sessions), Mosq'Address);
+      Mosq.Handle := Mosquitto_New (L_ID, Extensions.Bool (Clean_Sessions), Mosq'Address);
       if Mosq.Handle = System.Null_Address then
          raise Mosquitto_Error;
       end if;
@@ -214,7 +214,7 @@ package body Mosquitto is
       L_ID : Interfaces.C.Strings.Chars_Ptr := (if Id = "" then Null_Ptr else New_String (ID));
       Ret  : Int;
    begin
-      Ret := Mosquitto_Reinitialise (Mosq.Handle, L_ID, Boolean'Pos (Clean_Sessions), Mosq'Address);
+      Ret := Mosquitto_Reinitialise (Mosq.Handle, L_ID, Extensions.Bool (Clean_Sessions), Mosq'Address);
       Free (L_ID);
       Retcode_2_Exception (Ret);
    end;
@@ -255,7 +255,7 @@ package body Mosquitto is
                                  Payloadlen => Int (Payloadlen),
                                  Payload    => Payload,
                                  Qos        => QoS_Type'Pos (Qos),
-                                 Retain     => Boolean'Pos (Retain));
+                                 Retain     => Extensions.Bool (Retain));
       Free (L_Topic);
       Retcode_2_Exception (Ret);
    end Will_Set;
@@ -551,7 +551,7 @@ package body Mosquitto is
                                 Payloadlen => Int (Payloadlen),
                                 Payload    => Payload,
                                 Qos        => QoS_Type'Pos (Qos),
-                                Retain     => Boolean'Pos (Retain));
+                                Retain     => Extensions.Bool (Retain));
       Free (L_Topic);
       Retcode_2_Exception (Ret);
    end Publish;
@@ -663,7 +663,7 @@ package body Mosquitto is
    procedure Tls_Insecure_Set (Mosq : Handle; Value : Boolean) is
       Ret     : Int;
    begin
-      Ret := Mosquitto_Tls_Insecure_Set (Mosq.Handle, Boolean'Pos (Value));
+      Ret := Mosquitto_Tls_Insecure_Set (Mosq.Handle, Extensions.Bool (Value));
       Retcode_2_Exception (Ret);
    end;
 
@@ -734,7 +734,7 @@ package body Mosquitto is
         (Mosq                          => Mosq.Handle,
          Reconnect_Delay               => Unsigned (Reconnect_Delay),
          Reconnect_Delay_Max           => Unsigned (Reconnect_Delay_Max),
-         Reconnect_Exponential_Backoff => Extensions.Bool (Boolean'Pos (Exponential_Backoff)));
+         Reconnect_Exponential_Backoff => Extensions.Bool (Exponential_Backoff));
       Retcode_2_Exception (Ret);
    end;
 
