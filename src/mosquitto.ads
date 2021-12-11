@@ -130,7 +130,7 @@ package Mosquitto is
    --  port -      the network port to connect to.
    --  keepalive - the number of seconds after which the broker should send a PING
    --             message to the client if no other messages have been exchanged
-   --             in that time.
+   --             in that time (decimal part will be ignored).
 
    not overriding
    procedure Set_Handler (Mosq      : in out Handle;

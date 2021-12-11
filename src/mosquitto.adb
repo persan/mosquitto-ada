@@ -338,7 +338,7 @@ package body Mosquitto is
         (Mosq      => Mosq.Handle,
          Host      => L_Host,
          Port      => Int (Port),
-         Keepalive => Int (Keepalive * 1000));
+         Keepalive => Int (Keepalive));
       Free (L_Host);
       Retcode_2_Exception (Ret);
       Mosq.Wait_Until_Connected;
@@ -383,7 +383,7 @@ package body Mosquitto is
         (Mosq         => Mosq.Handle,
          Host         => L_Host,
          Port         => Int (Port),
-         Keepalive    => Int (Keepalive * 1000),
+         Keepalive    => Int (Keepalive),
          Bind_Address => L_Bind_Address);
       Free (L_Host);
       Free (L_Bind_Address);
@@ -409,7 +409,7 @@ package body Mosquitto is
         (Mosq      => Mosq.Handle,
          Host      => L_Host,
          Port      => Int (Port),
-         Keepalive => Int (Keepalive * 1000));
+         Keepalive => Int (Keepalive));
       Free (L_Host);
       Retcode_2_Exception (Ret);
    end Connect_Async;
@@ -434,7 +434,7 @@ package body Mosquitto is
         (Mosq         => Mosq.Handle,
          Host         => L_Host,
          Port         => Int (Port),
-         Keepalive    => Int (Keepalive * 1000),
+         Keepalive    => Int (Keepalive),
          Bind_Address => L_Bind_Address);
       Free (L_Host);
       Free (L_Bind_Address);
@@ -459,7 +459,7 @@ package body Mosquitto is
       Ret := Mosquitto_Connect_Srv
         (Mosq         => Mosq.Handle,
          Host         => L_Host,
-         Keepalive    => Int (Keepalive * 1000),
+         Keepalive    => Int (Keepalive),
          Bind_Address => L_Bind_Address);
       Free (L_Host);
       Free (L_Bind_Address);
@@ -792,7 +792,7 @@ package body Mosquitto is
 
    Package_Initialization_Controler : Controler with Unreferenced;
 
-   function Is_Initialzed (Mosq          : Handle) return Boolean is
+   function Is_Initialzed (Mosq : Handle) return Boolean is
    begin
       return Mosq.Handle /= System.Null_Address;
    end;
