@@ -27,4 +27,4 @@ jobs:
         sudo apt-get install -y  mosquitto  && 
         echo "127.0.0.1 mqtt" | sudo tee -a /etc/hosts && 
         sudo systemctl start mosquitto && 
-        make compile
+        make test
