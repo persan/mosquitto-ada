@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+import os
+from os.path import *
+import subprocess
+
+from distutils.spawn import find_executable as which
+
+class Config:
+    def __init__(self,name):
+        self.gnatls=which("gnatls")
+        self.root=None
+        if self.gnatls:
+            self.root=dirname(dirname(self.gnatls))
+        self.findprjPath()
+        self.libroot=join(self.root,"lib")
+        self.include=join(self.root,"include",name)
+    def __str__(self):
+        ret=  "root = %s\n" % self.root
+        ret+= "gprpath = %s\n" % self.gprpath        
+        ret+= "libroot = %s\n" % self.libroot        
+        ret+= "include = %s\n" % self.include        
+        return ret
+    
+    def findprjPath(self):
+        os.putenv("GPR_PROJECT_PATH","")
+        os.putenv("ADA_PROJECT_PATH","")
+        os.putenv("GPR_PROJECT_PATH_FILE","")
+        self.gprpath=None
+        for line in subprocess.check_output(["gnatls","-v"]).split("\n"):
+            line=line.strip()
+            if len(line) > 1:
+                self.gprpath=line
+        return self.gprpath
+    def transform(self,src):
+        
+        
+
+
+if __name__ == "__main__":
+    c=Config("mosquitto")
+    print c
