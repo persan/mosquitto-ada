@@ -112,18 +112,18 @@ package Mosquitto is
       Payload    : aliased Msg_Type;
       Qos        : QoS_Type;
       Retain     : Boolean); --  with
-                             --  Pre => not Mosq.Is_Connected and then Topic /= "" ;
+   --  Pre => not Mosq.Is_Connected and then Topic /= "" ;
 
    not overriding
    procedure Will_Clear
      (Mosq       : in out Handle) with
      Pre => not Mosq.Is_Connected;
-
+   subtype Keepalive_Duration is Duration range  5.0 .. Duration'Last;
    not overriding
    procedure Connect (Mosq      : in out Handle;
                       Host      : String := "localhost";
                       Port      : Positive := DEFAULT_PORT;
-                      Keepalive : Duration := 0.0) with
+                      Keepalive : Keepalive_Duration := 5.0) with
      Pre => Mosq.Is_Initialzed and then not Mosq.Is_Connected,
      Post => Mosq.Is_Connected;
    --  host -      the hostname or ip address of the broker to connect to.
@@ -141,7 +141,7 @@ package Mosquitto is
    procedure Connect_Bind (Mosq         : in out Handle;
                            Host         : String := "localhost";
                            Port         : Positive := DEFAULT_PORT;
-                           Keepalive    : Duration := 0.0;
+                           Keepalive : Keepalive_Duration := 5.0;
                            Bind_Address : String) with
      Pre => Mosq.Is_Initialzed and then not Mosq.Is_Connected,
      Post => Mosq.Is_Connected;
@@ -150,21 +150,21 @@ package Mosquitto is
    procedure Connect_Async (Mosq      : in out Handle;
                             Host      : String := "localhost";
                             Port      : Positive := DEFAULT_PORT;
-                            Keepalive : Duration := 0.0) with
+                            Keepalive : Keepalive_Duration := 5.0) with
      Pre => Mosq.Is_Initialzed and then not Mosq.Is_Connected;
 
    not overriding
    procedure Connect_Bind_Async (Mosq         : in out Handle;
                                  Host         : String := "localhost";
                                  Port         : Positive := DEFAULT_PORT;
-                                 Keepalive    : Duration := 0.0;
+                                 Keepalive : Keepalive_Duration := 5.0;
                                  Bind_Address : String) with
      Pre => Mosq.Is_Initialzed and then not Mosq.Is_Connected;
 
    not overriding
    procedure Connect_Srv (Mosq         : in out Handle;
                           Host         : String := "localhost";
-                          Keepalive    : Duration := 0.0;
+                          Keepalive : Keepalive_Duration := 5.0;
                           Bind_Address : String) with
      Pre => Mosq.Is_Initialzed and then not Mosq.Is_Connected,
      Post => Mosq.Is_Connected;

@@ -304,14 +304,14 @@ package body Mosquitto is
                               Username : String;
                               Password : String := "") is
       L_Username : Interfaces.C.Strings.Chars_Ptr :=
-                     (if Username = ""
-                      then Interfaces.C.Strings.Null_Ptr
-                      else New_String (Username));
+        (if Username = ""
+         then Interfaces.C.Strings.Null_Ptr
+         else New_String (Username));
 
       L_Password : Interfaces.C.Strings.Chars_Ptr :=
-                     (if Password = ""
-                      then Interfaces.C.Strings.Null_Ptr
-                      else New_String (Password));
+        (if Password = ""
+         then Interfaces.C.Strings.Null_Ptr
+         else New_String (Password));
       Ret        : Int;
    begin
       Ret := Mosquitto_Username_Pw_Set (Mosq.Handle, L_Username, L_Password);
@@ -328,7 +328,7 @@ package body Mosquitto is
      (Mosq      : in out Handle;
       Host      : String := "localhost";
       Port      : Positive := DEFAULT_PORT;
-      Keepalive : Duration := 0.0)
+      Keepalive : Keepalive_Duration := 5.0)
    is
       L_Host     : Interfaces.C.Strings.Chars_Ptr := New_String (Host);
       Ret        : Int;
@@ -338,7 +338,7 @@ package body Mosquitto is
         (Mosq      => Mosq.Handle,
          Host      => L_Host,
          Port      => Int (Port),
-         Keepalive => Int (Keepalive * 1000));
+         Keepalive => Int (Keepalive));
       Free (L_Host);
       Retcode_2_Exception (Ret);
       Mosq.Wait_Until_Connected;
@@ -371,7 +371,7 @@ package body Mosquitto is
      (Mosq         : in out Handle;
       Host         : String := "localhost";
       Port         : Positive := DEFAULT_PORT;
-      Keepalive    : Duration := 0.0;
+      Keepalive : Keepalive_Duration := 5.0;
       Bind_Address : String)
    is
       L_Host             : Interfaces.C.Strings.Chars_Ptr := New_String (Host);
@@ -383,7 +383,7 @@ package body Mosquitto is
         (Mosq         => Mosq.Handle,
          Host         => L_Host,
          Port         => Int (Port),
-         Keepalive    => Int (Keepalive * 1000),
+         Keepalive    => Int (Keepalive),
          Bind_Address => L_Bind_Address);
       Free (L_Host);
       Free (L_Bind_Address);
@@ -399,7 +399,7 @@ package body Mosquitto is
      (Mosq      : in out Handle;
       Host      : String := "localhost";
       Port      : Positive := DEFAULT_PORT;
-      Keepalive : Duration := 0.0)
+      Keepalive : Keepalive_Duration := 5.0)
    is
       L_Host     : Interfaces.C.Strings.Chars_Ptr := New_String (Host);
       Ret        : Int;
@@ -409,7 +409,7 @@ package body Mosquitto is
         (Mosq      => Mosq.Handle,
          Host      => L_Host,
          Port      => Int (Port),
-         Keepalive => Int (Keepalive * 1000));
+         Keepalive => Int (Keepalive));
       Free (L_Host);
       Retcode_2_Exception (Ret);
    end Connect_Async;
@@ -422,7 +422,7 @@ package body Mosquitto is
      (Mosq         : in out Handle;
       Host         : String := "localhost";
       Port         : Positive := DEFAULT_PORT;
-      Keepalive    : Duration := 0.0;
+      Keepalive : Keepalive_Duration := 5.0;
       Bind_Address : String)
    is
       L_Host             : Interfaces.C.Strings.Chars_Ptr := New_String (Host);
@@ -434,7 +434,7 @@ package body Mosquitto is
         (Mosq         => Mosq.Handle,
          Host         => L_Host,
          Port         => Int (Port),
-         Keepalive    => Int (Keepalive * 1000),
+         Keepalive    => Int (Keepalive),
          Bind_Address => L_Bind_Address);
       Free (L_Host);
       Free (L_Bind_Address);
@@ -448,7 +448,7 @@ package body Mosquitto is
    procedure Connect_Srv
      (Mosq         : in out Handle;
       Host         : String := "localhost";
-      Keepalive    : Duration := 0.0;
+      Keepalive : Keepalive_Duration := 5.0;
       Bind_Address : String)
    is
       L_Host             : Interfaces.C.Strings.Chars_Ptr := New_String (Host);
@@ -459,7 +459,7 @@ package body Mosquitto is
       Ret := Mosquitto_Connect_Srv
         (Mosq         => Mosq.Handle,
          Host         => L_Host,
-         Keepalive    => Int (Keepalive * 1000),
+         Keepalive    => Int (Keepalive),
          Bind_Address => L_Bind_Address);
       Free (L_Host);
       Free (L_Bind_Address);
