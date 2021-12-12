@@ -24,7 +24,7 @@ begin
    C.Initialize (GNAT.Sockets.Host_Name & "/" & Ada.Directories.Simple_Name (Ada.Command_Line.Command_Name) & Getpid'Img);
    P.Start;
    C.Set_Handler (A'Unchecked_Access);
-   C.Connect ("mqtt");
+   C.Connect (Host => "mqtt", Keepalive => 30.0);
    C.Subscribe (Topic => "#");
    C.Publish (Mid => null, Topic => "test", Payload => "[" & GNAT.Time_Stamp.Current_Time & "] Hej", Qos => QOS_0, Retain => False);
    delay 1.0;

@@ -792,7 +792,7 @@ package body Mosquitto is
 
    Package_Initialization_Controler : Controler with Unreferenced;
 
-   function Is_Initialzed (Mosq          : Handle) return Boolean is
+   function Is_Initialzed (Mosq : Handle) return Boolean is
    begin
       return Mosq.Handle /= System.Null_Address;
    end;
