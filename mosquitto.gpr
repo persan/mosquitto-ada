@@ -14,7 +14,7 @@ library project Mosquitto is
    for Library_Dir use "lib";
    type Library_Type_Type is ("relocatable", "static", "static-pic");
    Library_Type : Library_Type_Type :=
-                    external ("MOSQUITTO_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+     external ("MOSQUITTO_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
    for Library_Kind use Library_Type;
 
    package Builder is
