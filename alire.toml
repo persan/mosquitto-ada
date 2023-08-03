@@ -1,7 +1,7 @@
 name = "mosquitto"
 description = "An Ada-binding to mosquitto https://mosquitto.org/"
 version = "1.0.2"
-
+website = "https://github.com/persan/mosquitto-ada"
 authors = ["Per Sandberg <per.s.sandberg@bahnhof.se>"]
 maintainers = ["Per Sandberg <per.s.sandberg@bahnhof.se>"]
 maintainers-logins = ["persan"]
