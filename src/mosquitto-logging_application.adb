@@ -1,8 +1,8 @@
-with Gnat.IO;
+with GNAT.IO;
 with GNAT.Source_Info;
 with GNAT.Time_Stamp;
 package body Mosquitto.Logging_Application is
-   use Gnat.IO;
+   use GNAT.IO;
    use GNAT.Source_Info;
    use GNAT.Time_Stamp;
 
@@ -12,7 +12,7 @@ package body Mosquitto.Logging_Application is
       pragma Unreferenced (Self);
    begin
       Put_Line (Current_Time & ":" & Item);
-   end;
+   end Put_Line;
 
    ----------------
    -- On_Connect --
@@ -25,7 +25,8 @@ package body Mosquitto.Logging_Application is
    is
       pragma Unreferenced (Mosq);
    begin
-      Application'Class (Self.all).Put_Line (Enclosing_Entity & " (Reason =>" & Reason'Img & ")");
+      Application'Class (Self.all).Put_Line
+        (Enclosing_Entity & " (Reason =>" & Reason'Img & ")");
    end On_Connect;
 
    -------------------
@@ -39,7 +40,8 @@ package body Mosquitto.Logging_Application is
    is
       pragma Unreferenced (Mosq);
    begin
-      Application'Class (Self.all).Put_Line (Enclosing_Entity & " (Reason=>" & Reason'Img & ")");
+      Application'Class (Self.all).Put_Line
+        (Enclosing_Entity & " (Reason=>" & Reason'Img & ")");
    end On_Disconnect;
 
    ----------------
@@ -53,7 +55,8 @@ package body Mosquitto.Logging_Application is
    is
       pragma Unreferenced (Mosq);
    begin
-      Application'Class (Self.all).Put_Line (Enclosing_Entity & " (Mid =>" & Mid'Img & ")");
+      Application'Class (Self.all).Put_Line
+        (Enclosing_Entity & " (Mid =>" & Mid'Img & ")");
    end On_Publish;
 
    ----------------
@@ -69,18 +72,22 @@ package body Mosquitto.Logging_Application is
       QoS     : QoS_Type;
       Retain  : Boolean)
    is
-      Overlayed_Data : String (Natural (Payload'First) .. Natural (Payload'Last));
+      Overlayed_Data : String
+        (Natural (Payload'First) .. Natural (Payload'Last));
       pragma Import (C, Overlayed_Data);
+
       for Overlayed_Data'Address use Payload'Address;
       pragma Unreferenced (Mosq);
+
    begin
-      Application'Class (Self.all).Put_Line (Enclosing_Entity &
-                       " (Mid =>" & Mid'Img & "," &
-                       " Topic => """ & Topic & """," &
-                       " Payload => """ & Overlayed_Data & """"  &
-                       " QoS => " & QoS'Img & "," &
-                       " Retain => " & Retain'Img &
-                       ")");
+      Application'Class (Self.all).Put_Line
+        (Enclosing_Entity &
+           " (Mid =>" & Mid'Img & "," &
+           " Topic => """ & Topic & """," &
+           " Payload => """ & Overlayed_Data & """"  &
+           " QoS => " & QoS'Img & "," &
+           " Retain => " & Retain'Img &
+           ")");
    end On_Message;
 
    ------------------
@@ -95,7 +102,8 @@ package body Mosquitto.Logging_Application is
    is
       pragma Unreferenced (Mosq, Qoses);
    begin
-      Application'Class (Self.all).Put_Line (Enclosing_Entity & " (Mid =>" & Mid'Img & ")");
+      Application'Class (Self.all).Put_Line
+        (Enclosing_Entity & " (Mid =>" & Mid'Img & ")");
    end On_Subscribe;
 
    --------------------
@@ -109,7 +117,8 @@ package body Mosquitto.Logging_Application is
    is
       pragma Unreferenced (Mosq);
    begin
-      Application'Class (Self.all).Put_Line (Enclosing_Entity & " (Mid =>" & Mid'Img & ")");
+      Application'Class (Self.all).Put_Line
+        (Enclosing_Entity & " (Mid =>" & Mid'Img & ")");
    end On_Unsubscribe;
 
    ------------
@@ -124,7 +133,10 @@ package body Mosquitto.Logging_Application is
    is
       pragma Unreferenced (Mosq);
    begin
-      Application'Class (Self.all).Put_Line (Enclosing_Entity & " (Level =>" & Level'Img & ", Message => """ & Message & """)");
+      Application'Class (Self.all).Put_Line
+        (Enclosing_Entity &
+           " (Level =>" & Level'Img &
+           ", Message => """ & Message & """)");
    end On_Log;
 
 end Mosquitto.Logging_Application;

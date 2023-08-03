@@ -9,6 +9,7 @@ ACCESS=$(shell python ./helper.py ~/.ssh/github.token)
 -include Makefile.conf
 
 all:
+
 ifeq ("${GNATLS}","")
 $(error no gantls found)
 endif
@@ -22,12 +23,10 @@ all:compile test
 
 compile:
 	gprbuild -p -P mosquitto.gpr
-	gprbuild -p -P mosquitto-helpers.gpr
+	#gprbuild -p -P mosquitto-helpers.gpr
 
 install:
 	gprinstall -p -P mosquitto.gpr
-	#cp $(shell find -name "*.ads") ${DESTDIR}${PREFIX}/include/mosquitto/
-	#cp -r lib/* ${DESTDIR}${PREFIX}/lib/
 
 uninstall:
 	gprinstall -p -P mosquitto.gpr --uninstall

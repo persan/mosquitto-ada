@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<exceptions>
+   <case_exceptions>
+      <word>GNAT</word>
+      <word>int</word>
+      <word>chars_ptr</word>
+      <word>OS_Lib</word>
+      <word>ID</word>
+      <word>LL</word>
+      <word>bool</word>
+      <word>unsigned</word>
+      <substring>IO</substring>
+  </case_exceptions>
+</exceptions>
+

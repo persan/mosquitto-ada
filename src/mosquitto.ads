@@ -25,7 +25,8 @@ package Mosquitto is
    type Message_Id is mod 2 ** 64;
 
    type Application_Interface is limited interface;
-   type Application_Interface_Ref is not null access all Application_Interface'Class;
+   type Application_Interface_Ref is not null access all
+     Application_Interface'Class;
 
    not overriding function Is_Initialzed (Mosq : Handle) return Boolean;
    not overriding function Is_Connected (Mosq : Handle) return Boolean;
@@ -33,31 +34,35 @@ package Mosquitto is
    procedure Initialize (Mosq           : in out Handle;
                          ID             : String;
                          Clean_Sessions : Boolean := True)  with
-     Pre => ((Id = "" and then Clean_Sessions) or else Id /= "") and then not Mosq.Is_Initialzed and then Id'Length <= ID_MAX_LENGTH;
+     Pre => ((ID = "" and then Clean_Sessions) or else ID /= "") and then not
+     Mosq.Is_Initialzed and then ID'Length <= ID_MAX_LENGTH;
 
-   --  Id              String To use As The Client Id. if "", A Random Client Id
-   --                  will be generated.
+   --  Id              String To use As The Client Id. if "",
+   --                  A Random Client Id will be generated.
    --  CLean_Session - Set To True To Instruct The Broker To Clean all Messages
    --                  and subscriptions on disconnect, false to instruct it to
    --                  keep them. See the man page mqtt(7) for more details.
    --                  Note that a client will never discard its own outgoing
    --                  messages on disconnect. Calling <connect> or
    --                  <reconnect> will cause the messages to be resent.
-   --                  Use <reinitialise> to reset a client to its original state.
+   --                  Use <reinitialise> to reset a client to its
+   --                  original state.
    not overriding
    procedure Reinitialise (Mosq           : in out Handle;
                            ID             : String  := "";
                            Clean_Sessions : Boolean := True) with
-     Pre => ((Id = "" and then Clean_Sessions) or else Id /= "") and then Mosq.Is_Initialzed and then Id'Length <= ID_MAX_LENGTH;
-   --  Id              String To use As The Client Id. if "", A Random Client Id
-   --                  will be generated.
+     Pre => ((ID = "" and then Clean_Sessions) or else ID /= "") and then
+     Mosq.Is_Initialzed and then ID'Length <= ID_MAX_LENGTH;
+   --  Id              String To use As The Client Id. if "",
+   --                  A Random Client Id will be generated.
    --  CLean_Session - Set To True To Instruct The Broker To Clean all Messages
    --                  and subscriptions on disconnect, false to instruct it to
    --                  keep them. See the man page mqtt(7) for more details.
    --                  Note that a client will never discard its own outgoing
    --                  messages on disconnect. Calling <connect> or
    --                  <reconnect> will cause the messages to be resent.
-   --                  Use <reinitialise> to reset a client to its original state.
+   --                  Use <reinitialise> to reset a client
+   --                  to its original state.
 
    not overriding
    procedure Username_Pw_Set (Mosq     : in out Handle;
@@ -88,7 +93,8 @@ package Mosquitto is
       Payload    : aliased String;
       Qos        : QoS_Type;
       Retain     : Boolean) with
-     Pre => not Mosq.Is_Connected and then Topic /= "" and then Payload'Length <= Max_Message_Length;
+     Pre => not Mosq.Is_Connected and then Topic /= "" and then
+     Payload'Length <= Max_Message_Length;
 
    not overriding
    procedure Will_Set
@@ -98,7 +104,8 @@ package Mosquitto is
       Payload    : aliased Ada.Streams.Stream_Element_Array;
       Qos        : QoS_Type;
       Retain     : Boolean) with
-     Pre => not Mosq.Is_Connected and then Topic /= "" and then Payload'Length <= Max_Message_Length;
+     Pre => not Mosq.Is_Connected and then Topic /= "" and then
+     Payload'Length <= Max_Message_Length;
 
    generic
       type Msg_Type is private;
@@ -128,9 +135,9 @@ package Mosquitto is
      Post => Mosq.Is_Connected;
    --  host -      the hostname or ip address of the broker to connect to.
    --  port -      the network port to connect to.
-   --  keepalive - the number of seconds after which the broker should send a PING
-   --             message to the client if no other messages have been exchanged
-   --             in that time (decimal part will be ignored).
+   --  keepalive - the number of seconds after which the broker should
+   --              send a PING message to the client if no other messages have
+   --              been exchanged in that time (decimal part will be ignored).
 
    not overriding
    procedure Set_Handler (Mosq      : in out Handle;
@@ -141,7 +148,7 @@ package Mosquitto is
    procedure Connect_Bind (Mosq         : in out Handle;
                            Host         : String := "localhost";
                            Port         : Positive := DEFAULT_PORT;
-                           Keepalive : Keepalive_Duration := 5.0;
+                           Keepalive    : Keepalive_Duration := 5.0;
                            Bind_Address : String) with
      Pre => Mosq.Is_Initialzed and then not Mosq.Is_Connected,
      Post => Mosq.Is_Connected;
@@ -157,14 +164,14 @@ package Mosquitto is
    procedure Connect_Bind_Async (Mosq         : in out Handle;
                                  Host         : String := "localhost";
                                  Port         : Positive := DEFAULT_PORT;
-                                 Keepalive : Keepalive_Duration := 5.0;
+                                 Keepalive    : Keepalive_Duration := 5.0;
                                  Bind_Address : String) with
      Pre => Mosq.Is_Initialzed and then not Mosq.Is_Connected;
 
    not overriding
    procedure Connect_Srv (Mosq         : in out Handle;
                           Host         : String := "localhost";
-                          Keepalive : Keepalive_Duration := 5.0;
+                          Keepalive    : Keepalive_Duration := 5.0;
                           Bind_Address : String) with
      Pre => Mosq.Is_Initialzed and then not Mosq.Is_Connected,
      Post => Mosq.Is_Connected;
@@ -204,7 +211,8 @@ package Mosquitto is
       Payload    : String;
       Qos        : QoS_Type;
       Retain     : Boolean) with
-     Pre => Mosq.Is_Connected and then Topic /= "" and then Payload'Length <= Max_Message_Length;
+     Pre => Mosq.Is_Connected and then Topic /= "" and then
+     Payload'Length <= Max_Message_Length;
 
    not overriding
    procedure Publish
@@ -214,7 +222,8 @@ package Mosquitto is
       Payload    : Ada.Streams.Stream_Element_Array;
       Qos        : QoS_Type;
       Retain     : Boolean) with
-     Pre => Mosq.Is_Connected and then Topic /= "" and then Payload'Length <= Max_Message_Length;
+     Pre => Mosq.Is_Connected and then Topic /= "" and then
+     Payload'Length <= Max_Message_Length;
 
    generic
       type Msg_Type is private;
@@ -227,8 +236,8 @@ package Mosquitto is
       Topic      : String;
       Payload    : Msg_Type;
       Qos        : QoS_Type;
-      Retain     : Boolean); --  with
-   --  Pre => Mosq.Is_Initialzed and then Mosq.Is_Connected and then Topic /= "" ;
+      Retain     : Boolean)  with
+     Pre => Mosq.Is_Initialzed and then Mosq.Is_Connected and then Topic /= "";
 
    not overriding
    procedure Subscribe
@@ -270,7 +279,7 @@ package Mosquitto is
       Mid     : Message_Id;
       Topic   : String;
       Payload : Ada.Streams.Stream_Element_Array;
-      QoS     : QoS_Type;
+      Qos     : QoS_Type;
       Retain  : Boolean) is abstract;
 
    type Qos_Array is array (Natural range <>) of QoS_Type;
@@ -294,7 +303,8 @@ package Mosquitto is
       Level   : Integer;
       Message : String) is null;
 
-   type Pw_Callback_Function is access function (Mosq : in Handle'Class) return String;
+   type Pw_Callback_Function is access
+     function (Mosq : Handle'Class) return String;
 
    procedure Tls_Set
      (Mosq        : in out Handle;
@@ -361,7 +371,7 @@ private
       Mid     : Message_Id;
       Topic   : String;
       Payload : Ada.Streams.Stream_Element_Array;
-      QoS     : QoS_Type;
+      Qos     : QoS_Type;
       Retain  : Boolean) is null;
    Null_Application : aliased Null_Application_Type;
 
@@ -389,7 +399,7 @@ private
    --
    --  Is used to initialize and finalize the unrerlying library.
 
-   procedure Retcode_2_Exception (Code : Interfaces.C.Int);
+   procedure Retcode_2_Exception (Code : Interfaces.C.int);
    pragma Linker_Options  ("-l" & "mosquitto");
 
 end Mosquitto;

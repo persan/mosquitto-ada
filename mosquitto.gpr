@@ -1,41 +1,57 @@
+with "config/mosquitto_config.gpr";
 library project Mosquitto is
 
    VERSION := "1.0.1";
 
-   for Languages use ("Ada","Makefile");
+   for Languages use ("Ada", "Makefile", "toml");
 
 
-   for Source_Dirs use ("src/**",".");
-   for Object_Dir use ".obj/" & "/"& project'Name;
+   for Source_Dirs use ("src/**", ".", "config");
+   for Object_Dir use ".obj/" &  Mosquitto_Config.Build_Profile;
    for Library_Name use "a-mosquitto";
+   
+   for Create_Missing_Dirs use "True";
    for Library_Dir use "lib";
-
+   type Library_Type_Type is ("relocatable", "static", "static-pic");
+   Library_Type : Library_Type_Type :=
+                    external ("MOSQUITTO_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+   for Library_Kind use Library_Type;
 
    package Builder is
       for Default_Switches ("ada") use ("-k", "-j0", "-s");
    end Builder;
 
    package Compiler is
+      for Driver ("toml") use "";
       for Driver ("Makefile") use "";
       for Default_Switches ("ada") use
         ("-gnatwa"
          , "-gnatf"
          , "-fstack-check"
          , "-gnatyaAbBcdfhiknOptux"
-        );
+        ) & Mosquitto_Config.Ada_Compiler_Switches;
    end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
 
    package Pretty_Printer is
       for Default_Switches ("ada") use ("-l3", "-c5", "-c4", "-c3", "-N", "--no-separate-is", "--no-separate-loop-then");
    end Pretty_Printer;
 
    package Naming is
-      for Implementation_Suffix("Makefile") use ".mk";
-      for Implementation_Exceptions("Makefile") use ("Makefile");
+      for Implementation_Suffix ("toml") use ".toml";
+      for Implementation_Suffix ("Makefile") use ".mk";
+      for Implementation_Exceptions ("Makefile") use ("Makefile");
    end Naming;
    
-   package linker is
+   package Linker is
       for Linker_Options use ("-lmosquitto");
    end Linker;
-   
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
 end Mosquitto;
