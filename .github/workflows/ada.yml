@@ -21,7 +21,7 @@ jobs:
         wget https://github.com/alire-project/alire/releases/download/v1.2.2/alr-1.2.2-bin-x86_64-linux.zip &&
         unzip alr*.zip
     - name: Build
-      run: alr toolchain --select gnat_native &&
+      run: bin/alr toolchain --select gnat_native &&
         bin/alr build
 
     - name: Test
