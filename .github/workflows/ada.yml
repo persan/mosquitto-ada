@@ -17,7 +17,7 @@ jobs:
 
     - name: Set up GNAT toolchain
       run: >
-        sudo apt-get update && sudo apt-get upgrade -y && apt-get install wget unzip -y &&
+        sudo apt-get update && apt-get install wget unzip -y &&
         wget https://github.com/alire-project/alire/releases/download/v1.2.2/alr-1.2.2-bin-x86_64-linux.zip &&
         unzip alr*.zip
     - name: Build
