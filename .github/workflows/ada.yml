@@ -17,10 +17,11 @@ jobs:
 
     - name: Set up GNAT toolchain
       run: >
-        sudo apt-get update && 
-        sudo apt-get install -y gnat gprbuild libmosquitto-dev
+        sudo apt-get update && sudo apt-get upgrade -y && apt-get install wget unzip -y &&
+        wget https://github.com/alire-project/alire/releases/download/v1.2.2/alr-1.2.2-bin-x86_64-linux.zip &&
+        unzip alr*.zip
     - name: Build
-      run: make compile
+      run: ./alr build
 
     - name: Test
       run: >
