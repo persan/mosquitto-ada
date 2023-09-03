@@ -9,7 +9,21 @@ licenses = "MIT"
 tags = ["binding", "mqtt"]
 project-files = ["mosquitto.gpr"]
 
+[gpr-externals]
+  MOSQUITTO_PLATFORM = ["linux", "windows"]
+  MOSQUITTO_MODE = ["debug", "release"]
+
+[gpr-set-externals]
+  BUILD_MODE = "release"
+
+
+[[depends-on]]
+  [depends-on.'case(os)'.linux]
+    [depends-on.'case(distribution)'.'debian|ubuntu']
+       libmosquitto   = "^2.0.0"
+    [depends-on.'case(distribution)'.'fedora']
+       mosquitto = "^2.0.0"
+
 [[actions]]
 type = "test"
-
 command = ["make", "-C" , "tests" ]
