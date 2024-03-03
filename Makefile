@@ -1,6 +1,5 @@
 PROJECT=mosquitto-ada
 TAG=$(shell python ./helper.py bin/version)
-GNATLS?=$(shell which gnatls)
 VERSION=${PROJECT}-${TAG}
 USER=$(shell python ./helper.py ~/.ssh/github.user)
 ACCESS=$(shell python ./helper.py ~/.ssh/github.token)
@@ -9,10 +8,6 @@ ACCESS=$(shell python ./helper.py ~/.ssh/github.token)
 -include Makefile.conf
 
 all:
-
-ifeq ("${GNATLS}","")
-$(error no gantls found)
-endif
 
 
 Makefile.conf:Makefile  # IGNORE
@@ -23,7 +18,6 @@ all:compile test
 
 compile:
 	gprbuild -p -P mosquitto.gpr
-	#gprbuild -p -P mosquitto-helpers.gpr
 
 install:
 	gprinstall -p -P mosquitto.gpr
