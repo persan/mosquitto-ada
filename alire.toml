@@ -7,7 +7,6 @@ maintainers = ["Per Sandberg <per.s.sandberg@bahnhof.se>"]
 maintainers-logins = ["persan"]
 licenses = "MIT"
 tags = ["binding", "mqtt"]
-project-files = ["mosquitto.gpr"]
 
 [gpr-externals]
   MOSQUITTO_PLATFORM = ["linux", "windows"]
@@ -20,9 +19,9 @@ project-files = ["mosquitto.gpr"]
 [[depends-on]]
   [depends-on.'case(os)'.linux]
     [depends-on.'case(distribution)'.'debian|ubuntu']
-       libmosquitto   = "^2.0.0"
+       libmosquitto   = "^1.0.0"
     [depends-on.'case(distribution)'.'fedora']
-       mosquitto = "^2.0.0"
+       libmosquitto = "^1.0.0"
 
 [[actions]]
 type = "test"
